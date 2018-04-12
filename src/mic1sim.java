@@ -28,6 +28,8 @@
 * 
 */ 
 
+import gaborFix.IJVMEditor;
+
 import java.awt.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -210,6 +212,8 @@ public class mic1sim extends Frame implements Mic1Constants {
     opc_put_cl = null,
     h_store_cl = null,
     h_put_cl = null;  // In the dual-bus data path, this control line will always be asserted
+  private boolean editor;
+  private IJVMEditor code_editor;
 
 
   //**************************************************************************
@@ -253,6 +257,7 @@ public class mic1sim extends Frame implements Mic1Constants {
     window.add(new MenuItem("Memory"));
     window.add(new MenuItem("Method Area"));
     window.add(new MenuItem("Debug"));
+    window.add(new MenuItem("IJVM Editor"));
     menubar.add(window);		// FINE
 
     breakpoint = new Menu("Breakpoint");    // INIZIO MODIFICA: inserimento menu breakpoint
@@ -876,8 +881,15 @@ public class mic1sim extends Frame implements Mic1Constants {
 	   	memory = true;
 	    }
 	  }										//FINE											  
-        
-      if (((String)event.arg).equals("Exit")) {
+
+        if (((String)event.arg).equals("IJVM Editor")) {
+          if(!editor){
+            code_editor = new IJVMEditor();
+            code_editor.build();
+            editor = true;
+          }
+        }
+        if (((String)event.arg).equals("Exit")) {
 	    System.exit(0);
 	  }
       }

@@ -147,4 +147,8 @@ public class IJVMEditor extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
+    public void build() {
+        launch("");
+    }
 }
