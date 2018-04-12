@@ -1,0 +1,829 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.72 [en] (X11; I; SunOS 5.7 i86pc) [Netscape]">
+   <title>mic1 User Guide
+</title>
+</head>
+<body bgcolor="#FFFFFF">
+
+<h1>
+<tt>mic1</tt> User Guide</h1>
+Ray Ontko (<i><a href="mailto:rayo@ontko.com">rayo@ontko.com</a></i>)
+<p>April 11, 1999
+<h3>
+Contents</h3>
+
+<ol>
+<li>
+<a href="#1">Purpose</a></li>
+
+<li>
+<a href="#2">Files</a></li>
+
+<li>
+<a href="#3">Overview</a></li>
+
+<li>
+<a href="#4">Getting Started</a></li>
+
+<li>
+<a href="#5">Observe the Step-by-step Interpretation of an Assembly Language
+Program by a Microprogram</a></li>
+
+<li>
+<a href="#6">Write and Test Assembly Language Programs in IJVM</a></li>
+
+<li>
+<a href="#7">Write and Test Microprograms for the Mic1 Architecture</a></li>
+
+<li>
+<a href="#8">Modify and Test an Assembler</a></li>
+
+<li>
+<a href="#9">Modify and Test a Microassembler</a></li>
+
+<li>
+<a href="#10">Modify and Test a Microarchitecture Simulator</a></li>
+
+<li>
+<a href="#11">Implement a Simulator for a Modified Microarchitecture</a></li>
+
+<li>
+<a href="#12">Questions, Comments, Suggestions, Enhancements, Bug Reports</a></li>
+
+<li>
+<a href="#13">Copyright</a></li>
+
+<li>
+<a href="#14">Legal Notices</a></li>
+</ol>
+
+<h3>
+<a NAME="1"></a>1. Purpose</h3>
+This document contains instructions for installing and using the <tt>mic1</tt>
+microarchitecture simulator software and related utilities.&nbsp; 
+<tt>mic1</tt>
+is meant to be used as instructional software in conjuction with Andrew
+S. Tanenbaum, Structured Computer Organization, 4th Edition, (Prentice-Hall
+1999), particularly "Chapter 4: The Microarchitecture Level."
+<p>The software is implemented entirely in Java (JDK V1.0), and should
+run unmodified using any Java Virtual Machine (JVM). The source files for
+the programs are included with the package to allow users to implement
+other microarchitectures, assemblers, and microassemblers.
+<h3>
+<a NAME="2"></a>2. Files</h3>
+There are a number of files included in the mic1 distribution, including
+a few with file types (filename extensions) with which you may not be familiar.
+Here are the kinds of files included in the distribution:
+<dl>
+<dt>
+.bat</dt>
+
+<dd>
+a batch file for Win95/98/NT. This is a script which is used to run programs
+under Microsoft Windows operating systems.</dd>
+
+<dt>
+.conf</dt>
+
+<dd>
+a configuration file. This is a text file containing configuration information
+for a program.</dd>
+
+<dt>
+.ijvm</dt>
+
+<dd>
+an Integer Java Virtual Machine language file. This is a binary file containing
+IJVM object code.</dd>
+
+<dt>
+.jas</dt>
+
+<dd>
+a Java assembly language file. This is a text file containing IJVM source
+code.</dd>
+
+<dt>
+.mal</dt>
+
+<dd>
+a micro assembly language file. This is a text file containing source code
+for a microprogram.</dd>
+
+<dt>
+.mic1</dt>
+
+<dd>
+a microprogram for the Mic1 architecture. This is a binary file containing
+object code for a Mic1 microprogram.</dd>
+</dl>
+The following is a list of the files included in the mic1 distribution.
+<h4>
+Java program files</h4>
+
+<li>
+mic1asm, an assembler for Mic1 Micro-Assembly Language (MAL)</li>
+
+<li>
+gmic1asm, a graphical front-end to the <tt>mic1asm</tt> assembler.</li>
+
+<li>
+ijvmasm, an assembler for Integer Java Virtual Machine (IJVM)</li>
+
+<li>
+gijvmasm, a graphical front-end to the <tt>ijvmasm</tt> assembler.</li>
+
+<li>
+mic1sim, a simulator for the Mic1 architecture.</li>
+
+<li>
+dump, a program that will print the contents of a binary file in octal,
+decimal, and hexadecimal.</li>
+
+<li>
+mic1dasm, a disassembler which will convert a complied microprogram (MIC1)
+into Micro-Assembly Language (MAL).</li>
+
+<h4>
+Support files</h4>
+
+<li>
+ijvm.conf, a configuration file for the ijvmasm assembler. Contains a description
+of the assembly language which includes the opcode, mnemonic, and operand
+types for each instruction.</li>
+
+<h4>
+Sample programs</h4>
+
+<li>
+ijvmtest.jas, a program that tests all the features of the mic1 architecture.</li>
+
+<li>
+echo.jas, a program which accepts keyboard input and prints any key pressed
+to the standard out text area.</li>
+
+<li>
+add.jas, a program which accepts two hexadecimal numbers from keyboard
+input and displays the sum.</li>
+
+<h4>
+Documentation</h4>
+
+<li>
+user_guide.html, this document.</li>
+
+<li>
+mal.html, an overview of the Microprogram Assembly Language.</li>
+
+<li>
+jas.html, an overview of the Java Assembly Language.</li>
+
+<li>
+faq.html, Frequently Asked Questions.</li>
+
+<li>
+relnotes.html, release notes.</li>
+
+<h4>
+Source files</h4>
+The java source code to all of the java programs is in the <tt>source</tt>
+directory that is created when mic1 is installed.
+<h3>
+<a NAME="3"></a>3. Overview</h3>
+The <tt>mic1</tt> software includes three primary programs:
+<ul>
+<li>
+<tt>ijvmasm</tt>, an assembler for Integer Java Virtual Machine (IJVM)</li>
+
+<li>
+<tt>mic1asm</tt>, an assembler for Mic1 Micro-Assembly Language (MAL)</li>
+
+<li>
+<tt>mic1sim</tt>, a simulator for the Mic1 architecture</li>
+</ul>
+Students may use these programs, their source code, or other sample programs
+provided to:
+<ul>
+<li>
+observe the step-by-step interpretation of an assembly language program
+by a microprogram,</li>
+
+<li>
+write and test assembly language programs in IJVM,</li>
+
+<li>
+write and test microprograms for the Mic1 architecture,</li>
+
+<li>
+modify and test an assembler,</li>
+
+<li>
+modify and test a microassembler,</li>
+
+<li>
+modify and test a microarchitecture simulator, and</li>
+
+<li>
+implement a simulator for a modified microarchitecture.</li>
+</ul>
+This <i>User Guide</i> includes instructions on getting started with the
+software and how to use it in each of these activities.
+<h3>
+<a NAME="4"></a>4. Getting Started</h3>
+The mic1 software requires the Java Developer Kit (JDK) to run. Visit
+<a href="http://java.sun.com/products">http://java.sun.com/products</a>
+to find a JDK for Solaris or Win95/98/NT. For other platforms, see
+<a href="http://java.sun.com/cgi-bin/java-ports.cgi">http://java.sun.com/cgi-bin/java-ports.cgi</a>.
+<ol TYPE="1"><!--
+<LI>
+Before you get started, you should determine whether you 
+already have Java installed in your operating environment.
+<P>
+At a Unix or MS-DOS prompt, type "java -version".  
+For example:
+<PRE>
+   $ <B>java -version</B>
+   java version "1.1.7"
+</PRE>
+<P>
+If you see a message like 'java version "1.1.7"', then it appears
+that the Java Runtime Environment (JRE) is installed.  
+If you do not get this message you should first install 
+the Java Runtime Environment or the Java Deveopment Kit.
+Java technology is available from Sun or one of its 
+licensees.  Visit 
+<A HREF="http://www.java.sun.com/">http://www.java.sun.com/</A>
+and follow the "Products" link to find Java for your operating
+environment.
+<P>
+
+<LI>
+Determine whether you have the java compiler installed in your
+environment.
+<P>
+At a Unix or MS-DOS prompt, type "javac".
+For  example:
+<PRE>
+   $ <B>javac</B>
+   use: javac [-g][-O][-debug][-depend][-nowarn][-verbose][-classpath path][-nowrite][-deprecation][-d dir][-J<runtime flag>] file.java...
+</PRE>
+<P>
+If you don't see a "use" message, you probably don't have the
+Java Development Kit (JDK) installed.  While this isn't <EM>required</EM>
+to run the <TT>mic1</TT> software, it is needed in order to 
+compile or modify <TT>mic1</TT>.  If you plan on modifying or 
+recompiling the <TT>mic1</TT> software, you will need to obtain
+a copy of the Java Development Kit (JDK).  See above for information
+on where you can obtain the JDK.
+<P>
+-->
+<li>
+Download the mic1 software.</li>
+
+<p><br>It is available from <a href="http://www.ontko.com/mic1/">http://www.ontko.com/mic1/</a>,
+suitable for download to Unix-like operating systems (compressed <tt>tar</tt>
+format) and Win95/98/NT operating systems (self-extracting <tt>ZIP</tt>
+format).
+<p>Note that both distributions contain the same source code, documentation,
+and binary files. The only difference in the distributions is that the
+text files are formatted to be read easily on the target operating system.
+(Unix and Microsoft operating systems use a different format for text files).
+<li>
+Next, you'll need to install the files from the compressed distribution
+file.</li>
+
+<h4>
+Unix installation:</h4>
+
+<ol type="a">
+<li>
+To decompress under Unix-like operating systems, you'll need the GNU <tt>gunzip</tt>
+program or other compatible decompression software, and the <tt>tar</tt>
+program. GNU software is available from a number of FTP sites which are
+listed at
+<a href="http://www.gnu.org/order/ftp.html">http://www.gnu.org/order/ftp.html</a>.
+If you're using <tt>gunzip</tt>, at a shell prompt, type:</li>
+
+<pre>&nbsp;&nbsp; $ gunzip mic1.tar.gz
+&nbsp;&nbsp; $ tar xvf mic1.tar</pre>
+You may instead be able to do this in one step if you're using GNU <tt>tar</tt>:
+<pre>&nbsp;&nbsp; $ tar xzf mic1.tar.gz</pre>
+
+<li>
+Set the PATH environment variables</li>
+
+<p><br>In order to run any of the mic1 software, the PATH variable must
+contain the path of the JDK executables. To see if the PATH is set correctly,
+type <tt>which java</tt>. If a directory path is returned, the PATH is
+properly set. If nothing is returned, you need to find the jdk and then
+set the PATH.
+<p>To find out whether java is installed on your machine, you may want
+to use the <tt>find</tt> command. To search the "/usr" directory tree,
+use:
+<pre>&nbsp;&nbsp; $ find /usr -name "jdk*"
+&nbsp;&nbsp; /usr/lib/jdk1.1
+&nbsp;&nbsp; /usr/lib/jdk1.1/include/genunix/jdk_modulo.h</pre>
+The output from <tt>find</tt> indicates that (on my machine) there is a
+copy of the Java Development Kit in the directory <tt>/usr/lib/jdk1.1</tt>.
+The java executables are in the <tt>bin</tt> subdirectory of the jdk directory.
+To set the PATH, use one of the following commands, depending on the command
+shell you are using. For example, if the jdk on your machine is jdk1.1,
+and it is located in /usr/lib, then one of the following command sequences
+should work:
+<p>Bourne-compatible shell (sh, ksh, bash, zsh)
+<pre>&nbsp;&nbsp; $ PATH=/usr/lib/jdk1.1/bin:$PATH
+&nbsp;&nbsp; $ export PATH</pre>
+C-shell-compatible shell (csh, tcsh)
+<pre>&nbsp;&nbsp; % set path=( /usr/lib/jdk1.1/bin $PATH )</pre>
+If you are not sure which command shell you are using, try the command
+for the Bourne-compatible shell. If you get an error (<tt>export: Command
+not found</tt>), try the C-shell command.
+<li>
+Set the CLASSPATH environment variable</li>
+
+<p><br>The file "classes.zip" contains the compiled ".class" files for
+all the Mic1 Simulator software programs. This class file needs to be added
+to your java CLASSPATH in order to use the programs. Again, use one of
+the following commands, depending on the command shell you are using.
+<p>Bourne-compatible shell (sh, ksh, bash, zsh)
+<pre>&nbsp;&nbsp; $ CLASSPATH=/complete/path/of/classes.zip:$CLASSPATH
+&nbsp;&nbsp; $ export CLASSPATH</pre>
+C-shell-compatible shell (csh, tcsh)
+<pre>&nbsp;&nbsp; % setenv CLASSPATH /complete/path/of/classes.zip:$CLASSPATH</pre>
+To set these variables automatically when you login, use any text editor
+(vi, emacs, ex, etc.) to edit the <tt>.profile</tt> file in your home directory.
+Add the two commands to the file. When you next login, these variables
+will be set.
+<br>&nbsp;
+<br>&nbsp;</ol>
+
+<h4>
+Win95/98/NT installation</h4>
+
+<ol type="a">
+<li>
+Create a new folder called "mic1". Copy the <tt>mic1win.exe</tt> self-extracting
+zip file into the mic1 directory. Run <tt>mic1win.exe</tt>. All program
+files, source code, and documentation will be extracted.</li>
+
+<li>
+Before running any of the mic1 software, you must edit the included
+<tt>env.bat</tt>
+file. To do this, open <tt>env.bat</tt> with Notepad. Add "rem" to the
+beginning of the four lines following the instructions of step 1), so that
+they look like this:</li>
+
+<pre>rem echo&nbsp;&nbsp; NOTE: YOU NEED TO EDIT THE FILE ENV.BAT BEFORE YOUR mic1 SOFTWARE will
+rem echo&nbsp;&nbsp; WORK CORRECTLY.
+rem pause
+rem goto end</pre>
+
+<li>
+Next, alter the <tt>path</tt> statement under step 2) so the directory
+listed is the bin directory of the JDK (NOTE: leave <tt>;%path%</tt> at
+the end of the path statement). If you don't know where the bin directory
+is, from the Start menu, choose Find-->Files or Folders. Search for <tt>javac.exe</tt>.
+The directory given in the InFolder column is the directory to add to the
+path statement.</li>
+
+<li>
+Finally, alter the <tt>set CLASSPATH=</tt> statement under step 3) to point
+to the classes.zip in the directory where you installed the mic1 software.
+NOTE: if you ever wish to alter and recompile the mic1 .java files, you
+should remove classes.zip from the CLASSPATH and add the directory which
+is to contain the new .class files.</li>
+
+<li>
+To run the mic1 software, you may run <tt>mic1asm.bat</tt>, <tt>ijvmasm.bat</tt>,
+or <tt>mic1sim.bat</tt>. These batch files will execute <tt>env.bat</tt>
+and start the program.</li>
+
+<br>&nbsp;
+<p>&nbsp;</ol>
+
+<li>
+Test the installation.</li>
+
+<p><br>You can verify that the various parts of the installation are working
+correctly by assembling and running the <tt>ijvmtest</tt> program.
+<h4>
+Testing the Unix Installation</h4>
+
+<ol TYPE="a">
+<li>
+Assemble the <tt>ijvmtest</tt> program.</li>
+
+<pre>java ijvmasm ijvmtest.jas ijvmtest.ijvm</pre>
+
+<li>
+Run the Mic1 simulator, <tt>mic1sim</tt>. Note that we're using the <tt>mic1ijvm.mic1</tt>
+microprogram and the <tt>ijvmtest.ijvm</tt> macroprogram.
+java mic1sim
+mic1ijvm.mic1 ijvmtest.ijvm</li>
+
+<li>
+Click the Run button to begin interpretation of the macroprogram by the
+microprogram. After a brief period, while the simulator is running, you
+should see the following words in the "Standard out" text area:</li>
+
+<pre>OK
+End of run.</pre>
+&nbsp;</ol>
+
+<h4>
+Testing the Win95/98/NT Installation</h4>
+
+<ol TYPE="a">
+<li>
+Assemble the <tt>ijvmtest</tt> program.</li>
+
+<p><br>Invoke <tt>gijvmasm.bat</tt> by double-clicking on it.
+<p>Enter <tt>ijvmtest.jas</tt> as the input file.
+<p>Enter <tt>ijvmtest.ijvm</tt> as the output file.
+<p>Click the Compile button.
+<li>
+Run the Mic1 simulator, <tt>mic1sim</tt>.</li>
+
+<p><br>Invoke <tt>mic1sim.bat</tt> by double-clicking on it.
+<p>Under the File menu, choose Load Microprogram and select mic1ijvm.mic1
+as the microprogram to load.
+<p>Under the File menu, choose Load Macroprogram and select ijvmtest.ijvm
+as the macroprogram to load.
+<li>
+Click the Run button to begin interpretation of the macroprogram by the
+microprogram. After a brief period, while the simulator is running, you
+should see the following words in the "Standard out" text area:</li>
+
+<pre>OK
+End of run.</pre>
+&nbsp;</ol>
+</ol>
+
+<h3>
+<a NAME="5"></a>5. Observe the Step-by-step Interpretation of an Assembly
+Language Program by a Microprogram</h3>
+<tt>mic1sim</tt> is a java program with a graphical user interface (GUI)
+that allows you to observe the interpretation of an Instruction Set Architecture
+(ISA)-level program by a microarchitecture-level program.
+<p>In this example, we use the <tt>ijvmasm</tt> assembler to produce an
+ISA-level program from source code, and the <tt>mic1asm</tt> microassembler
+to produce a microarchitecture-level program from source code.
+<ol TYPE="1">
+<li>
+Assemble a sample IJVM program.</li>
+
+<p><br>From a command prompt:
+<pre>&nbsp;&nbsp; $ java ijvmasm echo.jas echo.ijvm</pre>
+From Win95/98/NT, simply launch, <tt>ijvmasm.bat</tt>.
+<p>This command causes the IJVM Assembler (<tt>ijvmasm</tt>) to read the
+text file <tt>echo.jas</tt> (which contains our IJVM assembly language
+source code) and produces a binary file <tt>echo.ijvm</tt> (which contains
+the ISA-level "executable" version of our code).
+<p>You may instead use the GUI version of the IJVM assembler from the command
+prompt under Unix:
+<pre>&nbsp;&nbsp; $ java gijvmasm</pre>
+This allows you to select the input and output files from a standard file
+dialog box. This front-end program is the program invoked by the <tt>ijvmasm.bat</tt>
+file in the Win95/98/NT distribution.
+<li>
+Assemble the microprogram.</li>
+
+<p><br>From a command prompt:
+<pre>&nbsp;&nbsp; java mic1asm mic1ijvm.mal mic1ijvm.mic1</pre>
+From Win95/98/NT, simply launch <tt>mic1asm.bat</tt>.
+<p>This command causes the Mic1 Microassembler (<tt>mic1asm</tt>) to read
+the text file <tt>mic1ijvm.mal</tt> (which countains our Micro Assembly
+Language source code for a simplified Java Virtual Machine interpreter
+to run on the Mic1 architecture) and produces a binary file <tt>mic1ijvm.mic1</tt>
+(which contains the actual data, i.e., microcode, to be loaded into the
+control store of a machine which implements the Mic1 architecture).
+<p>You may instead use the GUI version of the Mic1 microassembler from
+the command prompt under Unix:
+<pre>&nbsp;&nbsp; $ java gmic1asm</pre>
+This allows you to select the input and output files from a standard file
+dialog box. This front-end program is the program invoked by the <tt>mic1asm.bat</tt>
+file in the Win95/98/NT distribution.
+<li>
+Run the simulator</li>
+
+<pre>&nbsp;&nbsp; java mic1sim mic1ijvm.mic1 echo.ijvm</pre>
+This command causes the <tt>mic1sim</tt> application to begin execution.
+If you are running the <tt>mic1sim.bat</tt> program from Win95/98/NT, you
+will need to load the microprogram and macroprogram by selecting <tt>Load
+Microprogram</tt> and <tt>Load Macroprogram</tt> from the <tt>File</tt>
+menu. The window it creates should look something like this:
+<center>
+<p><img SRC="mic1sim.gif" height=421 width=592>
+<p>Figure 1. <tt>mic1sim</tt> at startup.</center>
+
+<p>You may click the Step button to execute the microprogram microinstruction-by-microinstruction,
+or you can use the Run and Stop buttons to initiate and suspend execution
+of the microprogram (which is, of course, interpreting your ISA-level program).
+The Reset button resets the Mic1 registers to their starting conditions
+(but not the memory).
+<li>
+Click the Run button.</li>
+
+<p><br>Since we're interpreting the <tt>echo.ijvm</tt> program, you should
+notice that if you click the Run button, anything you type will be echoed
+in the text field labeled standard output.
+<li>
+Click the Stop button, and then the Reset button.</li>
+
+<li>
+Now, click the Step button several times, slowly, and watch carefully what
+is going on.</li>
+
+<p><br>Notice how the statements of the microassembly program appear in
+the microinstruction field and how the values of the registers change each
+time you Step. By careful examination of the instruction and the registers,
+you should be able to predict what changes will be made to each register
+based your knowledge of the microinstruction that is about to execute.
+<br>&nbsp;
+<br>&nbsp;</ol>
+
+<h3>
+<a NAME="6"></a>6. Write and Test Assembly Language Programs in IJVM</h3>
+You can use the IJVM Assembler, <tt>ijvmasm</tt>, to practice writing assembly
+language programs, which you can then test on the Mic1 Simlulator, <tt>mic1sim</tt>.
+Read the <a href="jas.html">IJVM Assembly Language Specification</a> for
+an explanation of the structure of an IJVM program.
+<ol TYPE="1">
+<li>
+Using your favorite text editor, create a text file which contains your
+IJVM program.</li>
+
+<p><br>You may name your file anything you like; we have adopted the convention
+of using <tt>.jas</tt> as the file name suffix to indicate that it is a
+"Java Assembly" language file.
+<p>You may want to create a copy of <tt><a href="echo.jas">echo.jas</a></tt>
+or <tt><a href="add.jas">add.jas</a></tt> and modify it to suit your needs.
+<li>
+Run the IJVM assember:</li>
+
+<pre>&nbsp;&nbsp; java ijvmasm <i>input-filename</i> [ <i>output-filename</i> ]</pre>
+For example:
+<pre>&nbsp;&nbsp; java ijvmasm my_echo.jas
+&nbsp;&nbsp; java ijvmasm my_echo.jas my_echo.ijvm</pre>
+
+<li>
+Test your program with the Mic1 simulator:</li>
+
+<pre>&nbsp;&nbsp; java mic1sim mic1ijvm.mic1 <i>macroprogram</i></pre>
+For example:
+<pre>&nbsp;&nbsp; java mic1sim mic1ijvm.mic1 my_echo.ijvm</pre>
+Repeat the above process as you test and debug your IJVM program.
+<br>&nbsp;
+<br>&nbsp;</ol>
+
+<h3>
+<a NAME="7"></a>7. Write and Test Microprograms for the Mic1 Architecture</h3>
+You can use the Mic1 microassembler, <tt>mic1asm</tt>, to write your own
+microprograms for the Mic1 architecture.
+<ol TYPE="1">
+<li>
+Using your favorite text editor, create a text file which contains the
+Micro Assembly Language (MAL) text for your microprogram.</li>
+
+<p><br>You may name your file anything you like; we have adopted the convention
+of using <tt>.mal</tt> as the file name suffix to indicate that it is a
+"Micro Assembly Language" file.
+<p>You may want to create a copy of <tt><a href="mic1ijvm.mal">mic1ijvm.mal</a></tt>
+and modify it to suit your needs.
+<li>
+Run the Mic1 Micro-Assembly Language assembler:</li>
+
+<pre>&nbsp;&nbsp; java mic1asm <i>input-filename</i> <i>output-filename</i></pre>
+For example:
+<pre>&nbsp;&nbsp; java mic1asm my_ijvm.mal my_ijvm.mic1</pre>
+
+<li>
+Test your microprogram with the Mic1 simulator:</li>
+
+<pre>&nbsp;&nbsp; java mic1sim <i>microprogram</i> <i>macroprogram</i></pre>
+For example:
+<pre>&nbsp;&nbsp; java mic1sim my_ijvm.mic1 echo.ijvm</pre>
+&nbsp;</ol>
+Repeat the steps in the above process as you modify, test and debug your
+IJVM program.
+<p>Note that if you add new instructions to IJVM, or implement a microprogrammed
+interpreter for a totally different ISA-level language, you may also need
+to modify or create an assembler for that language. This is described breifly
+in the next section.
+<h3>
+<a NAME="8"></a>8. Modify and Test an Assembler</h3>
+You may also wish to extend or modify the functionality of the IJVM assembler,
+or perhaps create an ISA-level language assembler of your own.
+<p>Adding new instructions which are similar in format to the existing
+IJVM instructions is actually quite simple. You may be able to simply modify
+<tt><a href="ijvm.conf">ijvm.conf</a></tt>. (Of course, you will need to
+<i>implement</i> any new instructions in the microprogram, but the point
+here is that adding a new instruction does not generally require a change
+to the IJVM assembler).
+<p>If you want to add a new <i>type of </i>instruction, or add a pseudo-instruction,
+or otherwise change the behavior of the assembler, you'll need to modify
+it. View the source code for <tt>ijvmasm</tt> in the <tt>source</tt> directory
+you created when you installed the package.
+<ol TYPE="1">
+<li>
+Using your favorite text editor, modify <tt>ijvmasm.java</tt> or its dependent
+class files as appropriate.</li>
+
+<li>
+Compile your modified ijvmasm program and its dependent Java classes:</li>
+
+<pre>&nbsp;&nbsp; javac -depend ijvmasm</pre>
+
+<li>
+Test your compiled assembler using a suitable test file.</li>
+
+<pre>&nbsp;&nbsp; java ijvmasm my_test.jas my_test.ijvm</pre>
+
+<li>
+Test the output file from your assembler.</li>
+
+<p><br>Obviously, you could test this by using <tt>mic1sim</tt> and the
+<tt>mic1ijvm</tt> interpreter. You may also find it useful to visually
+inspect the output from the assembler using our Java-based <tt>dump</tt>
+program. For example:
+<pre>&nbsp;&nbsp; java dump my_test.ijvm</pre>
+This produces a three-column listing, one line for each byte of the file.
+The first column is the <i>decimal offset</i> (i.e., the address) of the
+byte, the second is the <i>hexadecimal</i> value at that location, and
+the third is the <i>decimal</i> value at that location.
+<p>Your operating system may also provide a more robust utility for this
+purpose (e.g., <tt>od</tt>, the "octal dump" program under Unix).
+<br>&nbsp;
+<br>&nbsp;</ol>
+Repeat the steps in the above process as you modify, test, and debug your
+assembler.
+<h3>
+<a NAME="9"></a>9. Modify and Test a Microassembler</h3>
+You may wish to provide added functionality for the microassembler, <tt>mic1asm</tt>.
+For example, you may wish to provide additional pseudo-instructions, or
+change the syntax of the Java-like code in the microinstructions.
+<p><tt>mic1asm</tt> is written in Java, and much of the semantics are contained
+in the source file <tt>mic1asm.java</tt>. However, the parser for the Micro
+Assembly Language (MAL) is written using a yacc-like program called "CUP
+Parser Generator for Java(TM)". This produces a Java LALR parser with embedded
+actions based on the specification given in the plain-text file <tt>Mic1Parser.cup</tt>.
+If you're changing the syntax or certain semantics of <tt>mic1asm</tt>,
+chances are you'll need to modify this file.
+<ol TYPE="1">
+<li>
+Download and install the CUP Parser Generator for Java(TM).</li>
+
+<p><br>The software is available at <a href="http://www.cs.princeton.edu/~appel/modern/java/CUP/">http://www.cs.princeton.edu/~appel/modern/java/CUP/</a>.
+<p>Be sure to add the CUP directory (the one which cointains the java_cup
+directory) to your CLASSPATH.
+<p>Unix in a Bourne-compatible shell (sh, ksh, bash, zsh):
+<pre>&nbsp;&nbsp; $ CLASSPATH=.:./cup&nbsp;
+&nbsp;&nbsp; % export CLASSPATH</pre>
+Unix in a C-shell-compatible shell (csh, tcsh)
+<pre>&nbsp;&nbsp; % setenv CLASSPATH=.:./cup</pre>
+Win95/98/NT:
+<pre>&nbsp;&nbsp;&nbsp; setenv CLASSPATH=.:.\cup</pre>
+
+<li>
+Using your favorite text editor, modify the appropriate Java source code
+(<tt>.java</tt> files), or the parser definition file (<tt>Mic1Parser.cup</tt>).</li>
+
+<li>
+Genenerate the parser class.</li>
+
+<pre>&nbsp;&nbsp; java java_cup.Main -parser Mic1Parser -symbol Mic1Symbol &lt; Mic1Parser.cup</pre>
+This invokes the <tt>Main</tt> class in the <tt>source/java_cup</tt> directory,
+produces a parser called <tt>Mic1Parser</tt>, using a lexical scanner which
+produces symbols from the class <tt>Mic1Symbol</tt>, and reads its input
+from <tt>Mic1Parser.cup</tt>.
+<li>
+Compile the Mic1 microassembler <tt>mic1asm</tt>.</li>
+
+<pre>&nbsp;&nbsp; javac -depend mic1asm.java</pre>
+
+<li>
+Test your compiled microassembler using a suitable test file.</li>
+
+<pre>&nbsp;&nbsp; java mic1asm my_test.mal my_test.mic1</pre>
+
+<li>
+Test the output file from your microassembler.</li>
+
+<p><br>Obviously, you could test this by using <tt>mic1sim</tt> and a suitable
+test program. You may also find it useful to visually inspect the output
+from the assembler using our Java-based <tt>dump</tt> program (see above
+under <i>Modify and Test an Assembler</i>).
+<p>Another tool included in <tt>mic1</tt>that you may also find useful
+is our Java-based mic1 disassembler, <tt>mic1dasm</tt>. For example:
+<pre>&nbsp;&nbsp; java mic1dasm my_test.mic1</pre>
+This reads the a binary file containing the control store (produced presumably
+by mic1asm) and produces a listing showing the decoded instruction at each
+location in the 512-word control store.
+<br>&nbsp;
+<br>&nbsp;</ol>
+Repeat the relevant steps in the above process as you modify, test, and
+debug your microassembler.
+<h3>
+<a NAME="10"></a>10. Modify and Test a Microarchitecture Simulator</h3>
+Adding features to the Mic1 Simulator is mostly an exercise in Java programming,
+with a slight emphasis on understanding the interaction between the user-interface
+and the underlying "components" of the <tt>mic1sim</tt> "architecture".
+<p>The overall process:
+<ol TYPE="1">
+<li>
+Using your favorite text editor, modify <tt>mic1sim.java</tt> or others
+of its dependent java classes.</li>
+
+<li>
+Compile the mic1sim program.</li>
+
+<pre>&nbsp;&nbsp; javac -depend mic1sim.java</pre>
+
+<li>
+Test the modified Mic1 Simulator.</li>
+
+<br>&nbsp;
+<p>&nbsp;</ol>
+Repeat the steps of the modify, test, debug process given above as appropriate.
+<h3>
+<a NAME="11"></a>11. Implement a Simulator for a Modified Microarchitecture</h3>
+Mostly, this involves modifying the configuration of the underlying "components"
+used by mic1sim and how they are handled in the main processing loop of
+<tt>mic1sim</tt>.
+<p>The overall process, then is quite straight-forward:
+<ol TYPE="1">
+<li>
+Using your favorite text editor, modify <tt>mic1sim.java</tt> or others
+of its dependent java classes.</li>
+
+<li>
+Compile the mic1sim program.</li>
+
+<pre>&nbsp;&nbsp; javac -depend mic1sim.java</pre>
+
+<li>
+Test the modified Mic1 Simulator.</li>
+
+<br>&nbsp;
+<p>&nbsp;</ol>
+Repeat the steps of the modify, test, debug process given above as appropriate.
+<h3>
+<a NAME="12"></a>12. Questions, Comments, Suggestions, Enhancements, Bug
+Reports</h3>
+For more information, visit the Mic1 Simulator software web page:
+<p><tt><a href="http://www.ontko.com/mic1/">http://www.ontko.com/mic1/</a></tt>
+<p>Please direct any other questions, comments, suggestions, enhancements
+or bug reports to:
+<pre>&nbsp;&nbsp; Ray Ontko
+&nbsp;&nbsp; Ray Ontko &amp; Co
+&nbsp;&nbsp; Richmond, Indiana, US
+&nbsp;&nbsp; e-mail: <tt><a href="mailto:rayo@ontko.com">rayo@ontko.com</a></tt></pre>
+
+<h3>
+<a NAME="13"></a>13. Copyright</h3>
+Copyright (C) 1999, Prentice-Hall, Inc.
+<p>This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 2 of the License, or (at your
+option) any later version.
+<p>This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details.
+<p>You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+<p>The file COPYING.TXT, included in this distribution, should contain
+a verbatim copy of the GNU General Public License.
+<h3>
+<a NAME="14"></a>14. Legal Notices</h3>
+This mic1 software is distributed under the GNU General Public License,
+a copy of which is included with this distribution in the file COPYING.TXT.
+<p>The Mic1 microassembler included here uses CUP, a parser generator program,
+produced by a third party and distributed under the following license:
+<p>CUP PARSER GENERATOR COPYRIGHT NOTICE, LICENSE AND DISCLAIMER.
+<p>Copyright 1996 by Scott Hudson, Frank Flannery, C. Scott Ananian
+<p>Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted, provided
+that the above copyright notice appear in all copies and that both the
+copyright notice and this permission notice and warranty disclaimer appear
+in supporting documentation, and that the names of the authors or their
+employers not be used in advertising or publicity pertaining to distribution
+of the software without specific, written prior permission.
+<p>The authors and their employers disclaim all warranties with regard
+to this software, including all implied warranties of merchantability and
+fitness. In no event shall the authors or their employers be liable for
+any special, indirect or consequential damages or any damages whatsoever
+resulting from loss of use, data or profits, whether in an action of contract,
+negligence or other tortious action, arising out of or in connection with
+the use or performance of this software.
+<p>If you intend to modify or recompile the microassembler program, you
+will need to download the CUP LALR Parser Generator for Java(TM). For more
+information about CUP, visit:
+<pre>&nbsp;&nbsp; http://www.cs.princeton.edu/~appel/modern/java/CUP/</pre>
+Java is a trademark of Sun Microsystems, Inc.
+</body>
+</html>

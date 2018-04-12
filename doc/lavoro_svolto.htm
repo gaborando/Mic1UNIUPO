@@ -1,0 +1,214 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.72 [en] (X11; I; SunOS 5.7 sun4u) [Netscape]">
+   <meta name="CREATED" content="20000710;13420700">
+   <meta name="CHANGEDBY" content="Simone Alciati">
+   <meta name="CHANGED" content="20000710;14032700">
+   <meta name="ProgId" content="Word.Document">
+   <meta name="Originator" content="Microsoft Word 9">
+   <title>LAVORO SVOLTO AL 1/5/2000</title>
+<!-- [if gte mso 9]<xml
+ <o:DocumentProperties
+  <o:AuthorSimo</o:Author
+  <o:TemplateNormal</o:Template
+  <o:LastAuthorSimo</o:LastAuthor
+  <o:Revision13</o:Revision
+  <o:TotalTime60</o:TotalTime
+  <o:Created2000-05-25T16:04:00Z</o:Created
+  <o:LastSaved2000-06-09T08:11:00Z</o:LastSaved
+  <o:Pages1</o:Pages
+  <o:Words334</o:Words
+  <o:Characters1904</o:Characters
+  <o:CompanyHoliday &amp; Sun</o:Company
+  <o:Lines15</o:Lines
+  <o:Paragraphs3</o:Paragraphs
+  <o:CharactersWithSpaces2338</o:CharactersWithSpaces
+  <o:Version9.2812</o:Version
+ </o:DocumentProperties
+</xml<![endif] -->
+<!-- [if gte mso 9]<xml
+ <w:WordDocument
+  <w:ActiveWritingStyle Lang="IT" VendorID="3" DLLVersion="517" NLCheck="0"1</w:ActiveWritingStyle
+  <w:HyphenationZone14</w:HyphenationZone
+ </w:WordDocument
+</xml<![endif] -->
+<style>
+	<!--
+		TD P { color: #000000 }
+		P { color: #000000 }
+		A:visited { color: #551a8b }
+		A:link { color: #0000ee }
+	-->
+	</style>
+</head>
+<body text="#000000" bgcolor="#FFFFFF" link="#0000EE" vlink="#551A8B">
+
+<center><font size=+2>LAVORO SVOLTO AL 11/7/2000</font></center>
+
+<ul>
+<li>
+<a href="#1">Breackpoint</a></li>
+
+<li>
+<a href="#2">Modifica registri</a></li>
+
+<li>
+<a href="#3">Gestione Stack</a></li>
+</ul>
+
+<hr SIZE=10 WIDTH="100%">
+<br>&nbsp;
+<p><a NAME="1"></a><font color="#FF0000">1) Breackpoint</font>
+
+<p CLASS="msonormal">Le modifiche pi&ugrave; consistenti al codice originario
+sono state:
+<ul>
+<div STYLE="margin-bottom: 0in">- aggiunta di un menu a tendina per l'inserimento
+dei Breackpoint (Insert Breackpoint, Delete Breackpoint, List of Breackpoint)</div>
+
+<div STYLE="margin-bottom: 0in">&nbsp;
+<br>- creazione di tre nuovi file: InsertBreackpointFrame.java, DeleteBreackpointFrame.java
+e BreackpointFrame.java che servono rispettivamente per l'inserimento,
+la cancellazione e la visualizzazione di breackpoint.</div>
+
+<div STYLE="margin-bottom: 0in">&nbsp;
+<br>- dichiarazione di un vector che contiene la lista dei breackpoint.
+Il vettore &egrave; sempre aggiornato in quanto viene passato per riferimento
+sia alla InsertBreackpointFrame che alla DeleteBreackpointFrame.</div>
+
+<div STYLE="margin-bottom: 0in">- dichiarazione di una variabile BreackpointFrame
+per la visualizzazione degli indirizzi di breackpoint. Questa variabile
+viene passata (sempre per riferimento) sia alla InsertBreackpointFrame
+che alla DeleteBreackpointFrame che aggiornano il Frame (aggiungono o rimuovono
+indirizzi di Breackpoint all'interfaccia grafica in modo che le informazioni
+visualizzate siano sempre</div>
+
+<div STYLE="margin-bottom: 0in">consistenti).</div>
+</ul>
+
+<div STYLE="margin-left: 0.25in; text-indent: -0.25in; margin-bottom: 0in"><font size=+0>Sia
+la InsertBreackpointFrame che la DeleteBreackpointFrame consentono di utilizzare
+indirizzi esadecimali.</font></div>
+
+<div STYLE="margin-left: 0.25in; text-indent: -0.25in; margin-bottom: 0in">&nbsp;</div>
+
+<div STYLE="margin-left: 0.25in; text-indent: -0.25in; margin-bottom: 0in"><font size=+0>Entrambe
+eseguono inoltre un controllo sul valore indicato:</font></div>
+
+<ul>
+<div STYLE="margin-bottom: 0in"><font size=+0>- sul fatto che il valore
+sia effettivamente un esadecimale (in modo da non inserire ad esempio "hj"
+come esadecimale o "ab" come decimale);</font></div>
+
+<p><br>- sul fatto che non si indichi un valore pi&ugrave; grande della
+dimensione massima della Main Memory;</ul>
+Per tenere traccia della lista dei breackpoint inseriti &egrave; stato
+creato un frame che li visualizza sempre in modo consistente con gli inserimenti
+o le cancellazioni effettuati. Il frame si apre automaticamente ad ogni
+nuovo inserimento e pu&ograve; essere facilmente richiamato in ogni momento
+dal men&ugrave; a tendina relativo ai breackpoint.
+
+<p CLASS="msonormal" STYLE="margin-bottom: 0in">Si fa notare che nella
+versione originale, per visualizzare un messaggio di dialogo, si utilizzava
+una classe ErrorDialog creata appositamente. Si &egrave; deciso (viste
+anche le migliori potenzialit&agrave; grafiche) di utilizzare il metodo
+showMessageDialog della classe JoptionPane (di Javax.swing) e di estendere
+ove possibile questa modifica in modo di ottenere messaggi di errore tipo:
+<br>&nbsp;
+<p>
+<hr SIZE=10 WIDTH="100%">
+<br>&nbsp;
+
+<p STYLE="margin-bottom: 0in"><a NAME="2"></a><font color="#FF0000">2)
+Modifica registri</font>
+<br>&nbsp;
+<div CLASS="msonormal" STYLE="margin-bottom: 0in">La modifica "al volo"
+dei registri non &egrave; stata possibile in quanto era impossibile cogliere
+l'evento di modifica (mentre nella gestione della MainMemory (Method Area)
+e della Stack(Memory) &egrave; stato possibile grazie alla particolare
+tabella utilizzata: Jtable). Si &egrave; quindi optato per una modifica
+eseguita da un frame apposito.</div>
+
+<div CLASS="msonormal" STYLE="margin-bottom: 0in">Le modifiche pi&ugrave;
+consistenti al codice originario sono quindi state:</div>
+
+<ul>
+<div CLASS="msonormal" STYLE="margin-bottom: 0in">- aggiunta di un pulsante
+Modify Register</div>
+
+<div CLASS="msonormal" STYLE="margin-bottom: 0in">&nbsp;
+<br>- creazione del nuovo file ModifyRegisterFrame.java (per la gestione
+del frame)</div>
+
+<div CLASS="msonormal" STYLE="margin-bottom: 0in">&nbsp;
+<br>- passaggio dalla dichiarazione private a public di variabili quali
+SP, PC ecc.</div>
+</ul>
+Il valore immesso deve essere non negativo per i valori di CPP, SP ed LV
+per problemi legati alla visualizzazione degli stessi nella terza colonna
+della Stack (Memory) se non e' attiva l'opzione "-n"
+<p>Si fa notare che la scelta dei registri da modificare e' vincolata da
+un menu a tendina in quanto non ha senso che registri quali il MPC&nbsp;
+possano essere modificati.
+<br>&nbsp;
+<p>
+<hr SIZE=10 WIDTH="100%">
+<br>&nbsp;
+
+<p STYLE="margin-bottom: 0in"><a NAME="3"></a><font color="#FF0000">Gestione
+della Stack</font>
+
+<p CLASS="msonormal">Le modifiche pi&ugrave; consistenti al codice originario
+sono state:
+<ul>
+<div STYLE="margin-bottom: 0in">- aggiunta di un elemento 'Memory' nel
+menu a tendina Windows</div>
+
+<div STYLE="margin-bottom: 0in">- creazione di due nuovi file: StackFrame.java
+e StackModel.java che servono rispettivamente per la visualizzazione e
+la gestione della Stack.
+<br>-possibilita' di specifica di un flag (-n)&nbsp; impostabile al momento
+del caricamento dell'emulatore (da riga di comando) che se presente inibisce
+la visualizzazione della terza colonna della finestra Memory, se non presente
+permette la visualizzazione di tale colonna ed impone un controllo sulla
+modifica dei registri(si veda la sezione apposita).</div>
+</ul>
+
+<div STYLE="margin-bottom: 0in">E' da notare che l'oggetto Stack non esisteva
+e non esiste tuttora. L'area dedicata alla Stack e' localizzata sulla Method
+Area . L'unica differenza sta nel fatto che l'indirizzamento del contenuto
+in quest'ultima (il macroprogramma) e' a byte, mentre l'indirizzamento
+della Stack e' a parole di 4 byte. Questa differenza e' stata gestita appieno
+e le parole di 4 byte della Stack si possono 'ritrovare' sulla Method Area
+divise in 4. Cosi' se si esegue il programma (che parte con un SP = 8000)
+e si aprono sia il frame che visualizza la Stack che quello che identifica
+la Method Area (all'indirizzo 20000 = 8000*4 in esadecimale) si puo' osservare
+la sincronizzazione delle aree visualizzate.</div>
+
+<div STYLE="margin-left: 0.25in; text-indent: -0.25in; margin-bottom: 0in">In
+modo analogo alla gestione della Method Area si e' utilizzata una JTable
+(da javax.swing) ed il file StackModel.java e' stato creato appositamente
+per la gestione del modello della tabella (in modo da sfruttare tutte le
+primitive del modello riguardanti la modifica delle celle, la gestione
+degli eventi sul frame della Stack (Memory) ecc.).</div>
+
+<div STYLE="margin-left: 0.25in; text-indent: -0.25in; margin-bottom: 0in">Si
+puo' specificare un qualunque indirizzo valido dell'area di memoria ed
+essa sara' visualizzata in parole di 4 byte; ecco perche' il lavoro svolto
+non e' da intendersi strettamente come visualizzatore della Stack ma come
+visualizzatore della memoria a prole di 4 byte.</div>
+
+<br>&nbsp;
+
+<p STYLE="margin-left: 0.25in; text-indent: -0.25in; margin-bottom: 0in">
+<hr SIZE=20 WIDTH="100%">
+
+<p STYLE="margin-left: 0.25in; text-indent: -0.25in; margin-bottom: 0in"><font color="#000000">...realizzato
+da Simone Alciati (<a href="mailto:alciati@edu-al.unipmn.it">alciati@edu-al.unipmn.it</a>).</font>
+
+<p STYLE="margin-left: 0.25in; text-indent: -0.25in; margin-bottom: 0in"><font color="#000000">Ultilmo
+aggiornamento: 9 Maggio 2001</font>
+</body>
+</html>

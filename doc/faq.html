@@ -1,0 +1,414 @@
+<HTML>
+<head>
+<title>mic1 FAQ
+</title>
+</head>
+
+<body bgcolor="white">
+<h1>
+<center>
+Frequently asked questions
+</center>
+</h1>
+<p>This document is a work in progress. </p>
+
+<p>
+<b>Installing and running mic1</b>
+<li><a href="#req">What do I need to run mic1?</a>
+<li><a href="#setup">I've downloaded and installed mic1.  
+What do I need to do now?</a>
+
+<p>
+<b>Writing IJVM programs</b>
+<li><a href="#inout">How do I use the I/O instructions, IN and OUT?</a>
+<li><a href="#method">How do I use methods in an IJVM program?</a>
+<LI><A href="#noecho">Why doesn't keyboard input read by the IN
+instruction show up in "Standard out"?</A>
+<li>How do I use constants in my program? <I>tbd</I>
+<li>How do I use local variables? <I>tbd</I>
+<li>Can I declare global variables? <I>tbd</I>
+
+<p>
+<b>General mic1 simulator questions</b>
+<li>
+<A HREF="#pcffffffff">Why does the PC start at 0xFFFFFFFF instead of 0x0?</A>
+<li>
+<A HREF="#nopfirst">Why is nop1 the first microinstruction, instead of 
+Main1?</A>
+<li>How does I/O work? <I>tbd</I>
+<li>What's the deal with the Debug frame? <I>tbd</I>
+<li>
+<A HREF="#debugmar">Why does the debug frame show some addresses as 
+word-addresses and others as byte-addresses?</A>
+</p>
+
+<P>
+<B>Questions about sample program</B> <TT>echo.jas</TT>
+<LI>
+<A HREF="#echonoerase">Why doesn't the backspace key work in
+<TT>echo.jas</TT>?
+</P>
+
+<p>
+<hr>
+<a name="req"></a>
+<b>What do I need to run mic1?</b>
+<p>
+Java Development Kit (JDK) 1.0 or later for Win95/98/NT or some flavor of
+Unix.  There is not currently a distribution available for Macintosh.
+<P>
+Some of the java programs may be used in a text-only environment
+(ijvmasm, mic1asm, mic1dasm, dump)
+but the simulator itself and certain other programs 
+(mic1sim, gijvmasm, gmic1asm) 
+require a graphical environment.  
+For Win95/98/NT users this should not a problem, but for Unix users, 
+this means that you will need X-Windows to run the simulator or
+GUI assemblers.
+<P>
+Also, for the Win95/98/NT distribution, you will need approximately 
+700Kbytes of free disk space to do the install.   The Unix installation
+requires about 600Kbytes.
+</p>
+<hr>
+<a name="setup"></a>
+<b>I've downloaded and installed mic1.  What do I need to do now?</b>
+<p>
+Before you run any of the mic1 software, you must set several environment
+variables.
+<ul>
+<li><b>PATH</b>: The PATH environment variable must contain the directory
+which has the JDK executables (java, javac, javadoc, etc).
+<ul>
+<li>Win95/98/NT: In a DOS shell, type <tt>path</tt> to view the PATH 
+environment variable.  
+For example:
+<pre>
+C:\>path
+PATH=C:\WINDOWS;C:\WINDOWS\COMMAND
+</PRE>
+<P>
+If the java bin directory is not in the PATH, 
+you will need to add it to the path defined in <tt>env.bat</tt>.  
+In the <TT>env.bat</TT> file you should add
+<PRE>
+path C:\JDK1.2\BIN;%PATH%
+</pre>
+<P>
+where you would replace "C:\JDK1.2\" with the path of your JDK directory.  
+<P>
+If you don't know
+the path of the JDK directory, select <b>Find-->Files or Folders... </b>from the
+Start menu.  Enter "javac.exe" in the <b>Named</b> field.  Make sure the 
+<b>Look in: </b> field indicates the correct drive, and the <b>Include 
+subfolders</b> option is selected.  Click <b>Find Now</b>.  Set PATH as
+the value in the <b>In Folder</b> column.  If no value appears, you do not have
+a JDK installed.  If multiple values appear, you might have multiple JDK's
+installed.  In this case, use any of the directories (preferably the directory
+containing the newer JDK).
+</p>
+<li>Unix: At a command prompt, type <tt>echo $PATH</tt> to view PATH.
+To add the java bin directory to the path, use one of the following commands,
+depending on the command shell you are using.
+<p>Bourne-compatable shell (sh, ksh, bash, zsh...)
+<pre>
+	export PATH=/usr/lib/jdk1.1/bin:$PATH
+</pre>
+</p>
+<p>C shell-compatable shells (csh, tcsh)
+<pre>
+	set path=( /usr/lib/jdk1.1/bin $PATH )
+</pre>
+</ul>
+<li><b>CLASSPATH</b>: The CLASSPATH variable indicates to the java utilities
+where to look for .class files.  The CLASSPATH can contain any number of 
+directories, .zip files, and .jar files.  
+</ul>
+<p>
+<hr>
+<a name="inout"></a>
+<b>
+How do I use the I/O instructions, IN and OUT?
+</b><br>
+<ul>
+<li><b>IN</b>: When a key is pressed, the character entered is put into a
+character buffer.  The <tt>IN</tt> instruction reads the next key from the
+buffer and pushes its value onto the stack.  If the character buffer is 
+empty, a value of 0 is pushed onto the stack.  The following is a method
+that illustrates how to read a single character from a keyboard input.
+<pre>
+.method getchar()
+start:	IN		// Read character from keyboard buffer
+	DUP		// Duplicate char, one copy for comparison, one for return value
+	IFEQ clear	// If char = 0 (keyboard buffer empty) goto clear
+	IRETURN		// else, return with char as return value
+clear:	POP		// Remove 0 from top of stack
+	GOTO start	// Try reading character again
+.end-method
+</pre>
+This method will loop until a key has been pressed.  The keyboard buffer
+can be cleared by clicking the Reset button in the mic1sim window.  <tt>IN</tt>
+does not echo characters to the standard out text area.  See <tt>echo.jas</tt>
+for an example of how to echo key strokes to the standard out text area.
+<li><b>OUT</b>: <tt>OUT</tt> prints the value on the top of the stack to
+the standard out text area.
+<pre>
+	BIPUSH 0x48	// Push ASCII value for "H"
+	OUT		// Print "H"
+	BIPUSH 0x49	// Push ASCII value for "I"
+	OUT		// Print "I"
+</pre>
+</ul>
+<tt>IN</tt> and <tt>OUT</tt> use ASCII codes to represent keyboard characters.
+See add.jas for examples of how to convert character strings into numeric
+values.
+<p>
+<hr>
+<a name="method"></a>
+<b>
+How do I use methods in an IJVM program?
+</b>
+<p>
+If you are using the included microprogram (mic1ijvm.mic1), the following
+is the proper procedure for declaring and invoking a method in an IJVM
+program.  To illustrate this, we will write a sample method called
+<tt>DIFF_NEG_YN</tt>, which takes two parameters, calculates the difference,
+prints "Y" if the difference is negative, "N" if positive, and sets as a
+return value the difference.
+<ol>
+<li><b>Declare the method.</b>  Use the .method directive to name the 
+method and any parameters.  Our example method is named <TT>DIFF_NEG_YN</tt>
+and has two parameters, which we will name <tt>p1</tt> and <tt>p2</tt>.
+Our method declaration would thus look like this:
+<pre>
+  .method DIFF_NEG_YN (p1,p2)
+</pre>
+The parameter list is comma-seperated.  The names in the list are automatically
+declared as local variables and assigned the values passed to the method.
+If a method takes no parameters, the method name should be followed by
+empty parenthesis, ie, <tt> .method PRINT ()</tt>.
+<li><b>Declare any local variables for the method.</b>
+Use the <tt>.var</tt> and <tt>.end-var</tt> directives to declare
+local variables.  For our example, we will declare a local variable
+called <tt>diff</tt>
+<pre>
+  .var
+  diff
+  .end-var
+</pre>
+<li><b>Write the contents of the method.</b>
+This is the program code for the method.  This code can access local variables
+(parameters and locally declared variables), global constants (declared in the
+<tt>.constant</tt> section of the program), and the local stack.  The 
+invoked method has no means of accessing the stack or the local variables
+of the invoking method.  Likewise, any jumps (GOTO, IFEQ, IFLT, IF_ICMPEQ)
+can only happen within a method -- jumps between methods are not allowed.
+Here is the code for our sample program:
+<pre>
+	ILOAD p1	// Push the first parameter
+	ILOAD p2	// Push the second parameter
+	SUB		// Subtract
+	ISTORE diff	// Store the difference in diff
+	ILOAD diff	// Push diff
+	IFLT lt 	// If diff < 0, goto lt
+	BIPUSH 0x4E	//  else, print "N"
+	OUT
+	GOTO return
+lt:	BIPUSH 0x59	// (diff < 0)
+	OUT		// print "Y"
+return:	ILOAD diff  	// Push diff
+	IRETURN		// Return (value of diff will be pushed onto the
+			//  top of the invoking method's stack)
+
+.end-method
+</pre>
+The method must end with the <tt>.end-method</tt> directive.  The IRETURN
+instruction is necessary for the method to properly execute.
+
+<li><b>Write the code for invoking the method.</b> These steps <i>must</i>
+be followed to properly invoke a method.
+<ol>
+<li>Push OBJREF.  This may be any value.  For more information on OBJREF,
+see chapter 4 of <u>Structured Computer Organization</u>.  In our example
+program, we will push a constant called OBJREF, which was declared in the 
+.constant section of the program.
+<pre>
+	LDC_W OBJREF
+</pre>
+<li>Push values that are to be method parameters <i>in the order they are
+declared in the method declaration</i>.
+<pre>
+	BIPUSH 0x10
+	BIPUSH 0x15
+</pre>
+When the method is called, p1 will be assigned the value 0x10 and p2 will
+be assigned the value of 0x15.
+<li>Invoke the method using <tt>INVOKEVIRTUAL</tt>
+<pre>
+	INVOKEVIRTUAL DIFF_NEG_YN
+</pre>
+<li>The return value of the method is on the top of the stack.  For our
+example program, we will just ignore this value.
+<pre>
+	POP
+</pre>
+</ol>
+</ol>
+Here is the complete listing of our sample program
+<pre>
+// --- Start program ---
+
+.constant 
+OBJREF 0x10
+.end-constant
+
+.main
+	LDC_W OBJREF
+	BIPUSH 0x10
+	BIPUSH 0x15
+	INVOKEVIRTUAL DIFF_NEG_YN
+	POP
+	HALT
+.end-main
+
+
+.method DIFF_NEG_YN (p1,p2)
+
+.var
+diff
+.end-var
+
+	ILOAD p1	// Push the first parameter
+	ILOAD p2	// Push the second parameter
+	SUB		// Subtract
+	ISTORE diff	// Store the difference in diff
+	ILOAD diff	// Push diff
+	IFLT lt 	// If diff < 0, goto lt
+	BIPUSH 0x4E	//  else, print "N"
+	OUT
+	GOTO return
+lt:	BIPUSH 0x59	// (diff < 0)
+	OUT		// print "Y"
+return:	ILOAD diff  	// Push diff
+	IRETURN		// Return (value of diff will be pushed onto the
+			//  top of the invoking method's stack)
+.end-method
+
+// --- End program ---
+</pre>
+<hr>
+
+<A NAME="noecho"><B>Why doesn't keyboard input read by the IN 
+instruction show up in "Standard out"?</B></A>
+<P>
+Because you <EM>might</EM> not want it to. The IN instruction 
+reads from a device that is strictly an input device, 
+and the OUT instruction writes to a device that is strictly an
+output device.  If you want to display what the user is typing
+while running your IJVM program,
+you will need to cause this to happen by
+doing an explicit OUT instruction for each character that you
+read and want to echo.
+<HR>
+
+<A name="pcffffffff"><B>Why does the PC start at 0xFFFFFFFF instead of 
+0x0?</B></A>
+<P>
+It seemed reasonable that the <EM>control store</EM> should begin
+execution at control store location 0x000.  
+This happens to be the location for the <TT>NOP</TT>
+IJVM instruction, so we begin our interpretation loop there.  
+We then 
+proceed to "Main1" to increment the PC, 
+and begin a fetch from this incremented address (the fetch happens
+at the end of the clock cycle and the fetched value is not available
+from MBR until the <EM>end</EM> of the next cycle).  Since
+we want execution of the ISA-level program to begin at 0x00000000, we 
+have accomplished this by pre-setting the PC to 0xFFFFFFFF and allowing
+the initial increment along with an initial NOP, this "wastes" one 
+micro-instruction every time we RESET the machine.
+<P>
+We <EM>could</EM> have used the same approach (with PC 0xFFFFFFFF) 
+and started at "Main1"
+instead of "nop1", in the <A HREF="mic1ijvm.mal"><TT>mic1ijvm.mal</TT></A> 
+microprogram, 
+but then we would have had to anchor "Main1" at
+some particular location which would then have to be well-known to 
+the "hardware" designers.  It seemed more reasonable to agree that
+the first micro-instruction to be executed would always 
+be the one at control store location 0x000 which is fine for 
+the mic1ijvm interpreter, and probably a reasonable design choice 
+for many microprograms (opcode 0x00 is often a NOP instruction for
+many ISA-level designers).
+<P>
+Another approach would have been to designate some other location
+as the first micro-instruction and require that a "fetch" happen
+with PC 0x00000000 (and then another instruction to wait for the
+fetch into the MBR to complete) before entering the main loop. 
+Since many microprograms have similar increment/fetch loops, we
+felt that it was reasonable to require that the PC be started at
+0xFFFFFFFF as part of the hardware design.
+<P>
+Feedback on this item is particularly welcomed 
+(<A HREF="mailto:rayo@ontko.com">rayo@ontko.com</A>).
+<HR>
+<A NAME="nopfirst"><B>Why is nop1 the first microinstruction, instead of 
+Main1?</B></A>
+<P>
+In order for "goto(MBR)" to work when MBR contains the opcode for
+<TT>NOP</TT>, the control store location 0x000 must contain the 
+microinstruction "nop1".   This means that "Main1" must be at
+some other location not used by one of the other opcodes, and that
+if we wanted to start our execution of the microprogram at "Main1"
+this location would have to be well known to the hardware designers
+for the mic1 hardware.  Since we may want to be able to run other 
+microprograms on the mic1 architecture, 
+it seemed reasonable to pick control store location
+0x000 as our starting address for all such microprograms.  
+<P>
+While any address would do as a starting location, 
+this one seemed particularly appropriate, since
+many microprograms might employ "goto(MBR)" and many ISA-level 
+languages might employ opcode 0x00 as a NOP instruction.
+<P>
+Feedback on this item is particularly welcomed 
+(<A HREF="mailto:rayo@ontko.com">rayo@ontko.com</A>).
+<HR>
+
+<A NAME="echonoerase"><B>Why doesn't the backspace key work in</B> 
+<TT>echo.jas</TT><B>?</B>
+<P>
+Because the simulator output device (a Java TextArea) doesn't handle 
+backspace characters.  It's hard to decide whether this is a feature or 
+a limitation.  The "Standard Out" window is not meant to simulate
+a cursor-addressable screen display, but only a serial device that 
+displays the next printable character it receives.  
+<P>
+We <EM>could</EM>
+modify the behavior of the standard output device to interpret
+the backspace character as "delete the last character (if any)
+on the current line in the output buffer", but we feel this 
+would be more confusing an implementation of a simple output
+device than one which ignores non-printable characters.
+<HR>
+
+<A NAME="debugmar"><B>Why does the debug frame show some addresses as 
+word-addresses and others as byte-addresses?</B></A>
+<P>
+The MAR stores a number that is a <EM>word</EM> address (not a word-aligned
+byte-address), and the PC stores a <EM>byte</EM> address.  This is specified
+in Chapter 4, of Tanenbaum.  When the MAR is expressed on the memory bus,
+it is at that point shifted by two bits.
+<HR>
+
+This page maintained by <A HREF="http://www.ontko.com/~dans/">Dan Stone</A> 
+(<A HREF="mailto:dans@ontko.com"><I>dans@ontko.com</I></A>).
+<BR>
+<I>
+Last updated: 
+
+Saturday, March 13, 1999
+</I>
+
+</BODY>
+</HTML>

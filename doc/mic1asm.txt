@@ -1,0 +1,66 @@
+
+
+
+mic1asm(1)                                             mic1asm(1)
+
+
+NAME
+       mic1asm - mic1 microassembler
+
+
+SYNOPSIS
+       java mic1asm input-file output-file
+
+
+DESCRIPTION
+       mic1asm  reads a text input-file containing a microprogram
+       in Mic-1 MicroAssembly  Language  (MAL),  and  produces  a
+       binary  output-file  containing  the  corresponding  Mic-1
+       microinstructions, suitable for  loading  into  the  Mic-1
+       microarchitecture simulator, mic1sim.
+
+       For example:
+
+       java mic1asm mic1ijvm.mal mic1ijvm.mic1
+
+
+       reads  mic1ijvm.mal  which  contains the text microprogram
+       and produces the binary file mic1ijvm.mic1,  suitable  for
+       loading into the mic1sim control store.
+
+       The  Mic-1  microprogrammed  architecture  is described in
+       Chapter 4 of  Andrew  S.  Tanenbaum,  Structured  Computer
+       Organization, 4e, (Prentice-Hall, 1998).
+
+
+
+
+
+ENVIRONMENT
+       The mic1 file classes.zip must be in your CLASSPATH.
+
+
+
+
+BUGS
+       None known.
+
+
+
+AUTHOR
+       Ray  Ontko (rayo@ontko.com).  Please direct comments, sug-
+       gestions, enhancements to Ray Ontko (rayo@ontko.com).
+
+
+SEE ALSO
+       mic1sim(1) and ijvmasm(1).
+
+
+
+
+
+
+
+                                                                1
+
+

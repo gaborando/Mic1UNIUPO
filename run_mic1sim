@@ -1,0 +1,5 @@
+#!/bin/bash 
+
+mic1_path=/opt/mic1sim_2008
+
+java -jar $mic1_path/mic1sim.jar

@@ -1,0 +1,409 @@
+<html>
+<head>
+<title>IJVM Assembly Language Specification</title>
+</HEAD>
+<body bgcolor="white">
+<h1>IJVM Assembly Language Specification</h1>
+<P>
+Dan Stone (<A HREF="mailto:dans@ontko.com"><I>dans@ontko.com</I></A>)
+<P>
+April 11, 1999
+<P>
+
+<H3>Contents</H3>
+<P>
+<OL>
+<li><a href="#purpose">Purpose</a>
+<li><a href="#const">Constants</a>
+<li><a href="#var">Local variables</a>
+<li><a href="#label">Labels</a>
+<li><a href="#main">Main program</a>
+<li><a href="#method">Methods</a>
+<li><a href="#io">Input and output</a>
+<li><a href="#comment">Comments</a>
+<li><a href="#format">.ijvm file format</a>
+<li><a href="#ijvm">IJVMInstructions</a>
+<li><a href="#ijvm.conf">ijvm.conf</a>
+</OL>
+<P>
+
+<H3><A NAME="purpose">1. Purpose</A></H3>
+<p>
+This document describes the syntax of the IJVM Assembly Language, as expected 
+by the mic1 IJVM Assembler.  See the summary of <a href="#ijvm">
+IJVM instructions</a> for an explanation of the default IJVM instructions.
+</p>
+
+<H3><a name="const">2. Constants</a></H3>
+<P>
+<b>Syntax:</b>
+<p>
+<tt>
+.constant<br>
+<i>constant1 value1<br>
+constant2 value2</i><br>
+.end-constant<br>
+</tt>
+</p>
+<b>Notes:</b>
+<p>
+Global constants are declared in the <tt>.constant</tt> section at the 
+beginning of the file.  
+The value of the constant can be given as a hexadecimal number (must be
+prefixed with "<tt>0x</tt>"), an octal number (must be prefixed with 
+"<tt>0</tt>"), or a decimal number (no prefix).  Declared constants may then
+be referred to by name, by an instruction expecting a constant as a parameter
+(i.e. <tt>LDC_W <i>constant_name</i> </tt>).  For example:
+<PRE>
+// this program displays all the printable ASCII values 32..126
+.constant
+one     1
+start   32
+stop    126
+.end-constant
+
+.main
+        LDC_W start
+next:   DUP
+        OUT             // output the current character
+        DUP
+        LDC_W stop
+        ISUB
+        IFEQ done       // exit if we've reached the end
+        LDC_W one
+        IADD
+        GOTO next       // increment and do the next one
+done:   POP
+        HALT     
+.end-main
+
+</PRE>
+<p>
+
+The values of the constants are loaded into the constant pool, the area of
+memory denoted by the CPP. 
+<P>
+In addition to user-defined constants, the absolute addresses of 
+methods are also assembled into the constant pool.  
+See the <a href="#method">Methods</a> section of this 
+document for more 
+information.
+<p>
+
+<H3><a name="var">3. Local Variables</a></H3>
+<P>
+<b>Syntax:</b>
+<p>
+<tt>
+<i>inside a .main or .method declaration</i><br><br>
+.var<br>
+<i>var1<br>
+var2</i><br>
+.end-var
+</tt>
+</p>
+<b>Notes:</b>
+<p>
+Local variables are declared inside a .main or .method section and may only
+be referenced by that main or method.  There are no global variables.
+</p>
+<p>
+Local variables are referenced by name (i.e. <tt>ISTORE <i>var_name</i></tt>).
+</p>
+
+<H3><a name="label">4. Labels</a></H3>
+
+<p>
+Labels are used to mark program lines for jump/goto instructions.  Labels
+are only accessable from within the method in which they are declared.  In 
+other words, jumps may only occur within a method, not between methods.
+</p>
+<p>
+Labels are words terminated by a colon.  Labels are declared at the beginning
+of the line and mark the next program instruction. Below is a program
+fragment that illustrates the use of labels:
+<PRE>
+        .
+        .
+        .
+	ILOAD total
+	LDC_W max_value
+	ISUB
+	IFLT lt_max		// If total < max_value, goto lt_max
+	GOTO gte_max		//  else (total >= max_value), goto gte_max
+lt_max:	HALT
+gte_max:			// Labels may be on seperate lines from the instructions they mark
+	ERR
+</pre>
+</p>
+
+<H3><a name="main">5. Main Program</a></H3>
+<P>
+<b>Syntax:</b>
+<p>
+<tt>
+.main<br>
+<br>
+<i>-- variable declaration --</i><br>
+<br>
+<i>-- program contents --</i><br>
+<br>
+.end-main
+</tt>
+</p>
+<b>Notes:</b>
+<p>
+Every IJVM program must contain a <tt>.main</tt> method.  <tt>.main</tt> must 
+be declared before any other method.
+</p>
+
+<H3><a name="method">6. Methods</a></H3>
+<P>
+<b>Syntax:</b>
+<p>
+<tt>
+.method <i>method_name</i>(<i>param1, param2,...</i>)<br>
+<br>
+<i>-- variable declaration --</i><br>
+<br>
+<i>-- method contents --</i><br>
+<br>
+.end-method
+</tt>
+</p>
+<b>Notes:</b>
+<p>
+When a method is declared, its byte address is added to the global constants
+and can be referenced by the method name. (i.e. <tt>INVOKEVIRTUAL <i>
+method_name</i></tt>).  Method parameters are declared by a comma-seperated
+list of the parameter names enclosed in parenthesis.  The parameters are
+added to the local variables of the method and can be referenced by name
+within the method (i.e. <tt>ILOAD <i>param1</i></tt>).  If there are no
+parameters, use empty parenthesis.
+</p>
+<p>
+Special care must be taken when invoking a method to ensure proper execution.
+A microprogram may expect a specific protocol to be followed in a method
+call.  For example, the <i>Mic1</i> microprogram, which is distributed with the
+<b>mic1</b> software, requires the following steps to be taken when invoking
+a method:
+<ul>
+<li><u> Push OBJREF</u>.  This is a reference to the object that is invoking
+the method.  In IJVM, OBJREF is used primarily as a place holder  
+(it is overwritten with the address of the location the old PC is stored), and the value pushed
+by the invoking method is ignored.  Thus, in IJVM, any value may be 
+pushed for OBJREF, but a value <i>must</i> be pushed.
+<li><u> Push any parameters</u>.  Parameters are pushed in the order that 
+they are listed in the method declaration (first parameter references the
+first value pushed before method call, second parameter references the second
+value pushed, etc.).
+<li><u> Invoke the method with <tt>INVOKEVIRTUAL <i>method_name</i></tt>.</u>
+<li><u> The return value is on the top of the stack</u>.  When <tt>IRETURN</tt>
+is called in a method, the value on the top of the method's stack is copied
+to the top of the invoking method's stack, to be used as a return value.
+</ul>
+For a more detailed explanation with a complete example, see the 
+<a href="faq.html#method">FAQ</a>.
+</p>
+
+<H3><a name="io">7. Input and output</a></H3>
+<p>
+Input and output are handled by the Main Memory module in the mic1 simulator.
+Main memory treats the highest memory addresses as an I/O device.  If a word
+is written to this area, main memory writes the word's character value to 
+the standard out text area of the simulator.  If a word is read from this
+area of memory, main memory will return the next available value from 
+an internal key buffer, which contains the character values of any user
+key-strokes.  If the buffer is empty (no key has been pressed), a value
+of zero is returned.
+</p>
+<p>
+The <tt>OUT</tt> command pops a word off the top of the stack and prints it
+to the standard out text area.
+<pre>
+	BIPUSH 0x41	// Push "A"
+	OUT		// Print "A"
+</pre>
+The <tt>IN</tt> command reads a character from the key buffer and pushes
+its value onto the stack.  If no key is available to read (no key pressed,
+all keys have been read), zero will be pushed onto the stack.  Therefore, 
+it is usually a good idea for a program to loop until IN returns a valid
+value.
+<pre>
+getch:	IN		// read character
+	DUP		// duplicate value for comparison
+	IFEQ reread	// if character=0 (no key press), goto reread
+	GOTO done	// else, goto done (character is valid key press)
+reread:	POP		// pop invalid number
+	GOTO getch	// try getting another character
+
+done:			// key stroke is on top of stack
+</pre>
+</p>
+
+<H3><a name="comment">8. Comments</a></H3>
+<p>
+The IJVM assembler uses C++ style comments: <b>//</b> (double forward slash) 
+indicates the start of a comment.  Everything following <b>//</b>, up to 
+the end-of-line character, is treated as a comment.
+</p>
+
+<H3><a name="format">9. .ijvm file format</a></H3>
+<p>
+An <tt>.ijvm</tt> file contains a 32-bit magic number, which identifies
+the file as a program that can be executed on the mic1 simulator, and 
+any number of data blocks.  A data block has three parts, a 32-bit origin 
+that indicates where in memory the block is to be loaded, a 32-bit byte
+count that indicates how many bytes of data are in the block, and the
+actual data bytes to be loaded into memory.
+<pre>
+	binary file = <32-bit magic number> [block]*
+	block       = <32-bit origin> <32-bit byte count> <data bytes>
+</pre>
+The 1.0 release of the IJVM Assembler creates two blocks, the constant
+pool and the program code.
+<P>
+
+<H3><A NAME="ijvm">10. IJVM Instructions</A></H3>
+<P>
+<table border>
+<tr><th>Mnemonic</th> <th>Operands</th> <th>Description</th> </tr>
+
+<tr>
+<td>BIPUSH</td>   <td>byte</td>   <td>Push a byte onto stack</td>
+</tr>
+
+<tr>
+<td>DUP</td>  <td>N/A</td>  <td>Copy top word on stack and push onto stack</td>
+</tr>
+
+<tr>
+<td>ERR</td> <td>N/A</td> <td>Print an error message and halt the simulator</td>
+</tr>
+
+<tr>
+<td>GOTO</td> <td>label name</td> <td>Unconditional jump</td>
+</tr>
+
+<tr>
+<td>HALT</td> <td>N/A</td> <td>Halt the simulator</td>
+</tr>
+
+<tr>
+<td>IADD</td> <td>N/A</td> <td>Pop two words from stack; push their sum</td>
+</tr>
+
+<tr>
+<td>IAND</td> <td>N/A</td> <td>Pop two words from stack; push Boolean AND</td>
+</tr>
+
+<tr>
+<td>IFEQ</td> <td>label name</td> <td>Pop word from stack and branch if it
+is zero</td>
+</tr>
+
+<tr>
+<td>IFLT</td> <td>label name</td> <td>Pop word from stack and branch if it
+is less than zero</td>
+</tr>
+
+<tr>
+<td>IF_ICMPEQ</td> <td>label name</td> <td>Pop two words from stack and branch
+if they are equal</td>
+</tr>
+
+<tr>
+<td>IINC</td> <td>variable name, byte</td> <td>Add a constant value to a 
+local variable</td>
+</tr>
+
+<tr>
+<td>ILOAD</td> <td>variable name</td> <td>Push local variable onto stack</td>
+</tr>
+
+<tr>
+<td>IN</td> <td>N/A</td> <td>Reads a character from the keyboard buffer and
+pushes it onto the stack.  If no character is available, 0 is pushed</td>
+</tr>
+
+<tr>
+<td>INVOKEVIRTUAL</td> <td>method name</td> <td>Invoke a method</td>
+</tr>
+
+<tr>
+<td>IOR</td> <td>N/A</td> <td>Pop two words from stack; push Boolean OR</td>
+</tr>
+
+</tr>
+<td>IRETURN</td> <td>N/A</td> <td>Return from method with integer value</td>
+</tr>
+
+<tr>
+<td>ISTORE</td> <td>variable name</td> <td>Pop word from stack and store in
+local variable</td>
+</tr>
+
+<tr>
+<td>ISUB</td> <td>N/A</td> <td>Pop two words from stack; push their difference
+</td>
+</tr>
+
+<tr>
+<td>LDC_W</td> <td>constant name</td> <td>Push constant from constant pool onto
+stack</td>
+</tr>
+
+<tr>
+<td>NOP</td> <td>N/A</td> <td>Do nothing</td>
+</tr>
+
+<tr>
+<td>OUT</td> <td>N/A</td> <td>Pop word off stack and print it to standard 
+out</td>
+</tr>
+
+<tr>
+<td>POP</td> <td>N/A</td> <td>Delete word from top of stack</td>
+</tr>
+
+<tr>
+<td>SWAP</td> <td>N/A</td> <td>Swap the two top words on the stack</td>
+</tr>
+
+<tr>
+<td>WIDE</td> <td>N/A</td> <td>Prefix instruction; next instruction has a 
+16-bit index</td>
+</tr>
+
+</table>
+
+<p>
+Operand descriptions:
+<li><b>byte</b>: A numeric literal, in octal (<tt>032</tt> - leading zero),
+decimal (<tt>26</tt> - no leading digits), or hexadecimal (<tt>0x1A</tt> - 
+leading zero-x) format. Character literals ('M - leading single quote) are 
+also allowed.  Compiled to a 1-byte constant
+<li><b>label name</b>: The string name of a label 
+(see <a href="#label">Label</a>).  Compiled to a 2-byte offset
+<li><b>variable name</b>: The string name of a local variable.  Compiled to 
+a 1-byte value, indicating an offset into the local variable frame.
+<li><b>method name</b>: The string name of a method.  When compiled, the 
+address of the method is calculated and put into the constant pool.  This 
+operand is then replaced with the 2-byte index (in the constant pool) of
+the address.
+<li><b>constant name</b>: The string name of a constant.  Compiled to a 
+2-byte index.
+<li><b>N/A</b>: This instruction takes no operands.
+<p>
+
+<H3><a name="ijvm.conf">11. <tt>ijvm.conf</tt></a></H3>
+<p>
+This required file contains descriptions of all of the instructions in
+the language.  The description contains the opcodes, mnemonics, and parameter
+types (if any) of each instruction that is to be recognized by the assembler.
+This file can be altered and extended, as long as the microprogram is altered
+to support any changes made.
+<p>
+
+</body>
+</html>

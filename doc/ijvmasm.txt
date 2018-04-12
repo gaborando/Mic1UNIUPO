@@ -1,0 +1,132 @@
+
+
+
+ijvmasm(1)                                             ijvmasm(1)
+
+
+NAME
+       ijvmasm - ijvm assembler
+
+
+SYNOPSIS
+       java ijvmasm input-file output-file
+
+
+DESCRIPTION
+       ijvmasm  reads  a  text input-file containing a program in
+       the Integer Java Virtual Machine (IJVM) language, and pro-
+       duces  a  binary  output-file containing the corresponding
+       IJVM instructions, suitable for  loading  into  the  Mic-1
+       microarchitecture simulator, mic1sim.
+
+       For example:
+
+       java ijvmasm test.ijvm test.iclass
+
+
+       reads  test.ijvm  which contains the text program and pro-
+       duces the binary file test.iclass,  suitable  for  loading
+       into the mic1sim main memory.
+
+       The  Mic-1  microprogrammed  architecture  is described in
+       Chapter 4 of  Andrew  S.  Tanenbaum,  Structured  Computer
+       Organization, 4e, (Prentice-Hall, 1998).
+
+
+
+
+FILES
+       ijvm.conf  contains the opcodes and instruction formats to
+       be used by ijvmasm.
+
+
+
+
+ENVIRONMENT
+       The mic1 file classes.zip must be in your CLASSPATH.
+
+
+
+
+BUGS
+       None known.
+
+
+
+AUTHOR
+       Dan Stone (dans@ontko.com).  Please direct comments,  sug-
+       gestions, enhancements to Ray Ontko (rayo@ontko.com).
+
+
+
+
+
+                                                                1
+
+
+
+
+
+ijvmasm(1)                                             ijvmasm(1)
+
+
+SEE ALSO
+       mic1sim(1) and mic1asm(1).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                2
+
+

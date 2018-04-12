@@ -1,0 +1,25 @@
+.text-area {
+    -fx-font-family: Consolas;
+    -fx-font-size: 13;
+    -fx-text-fill: #ffffff;
+    -fx-display-caret: true;
+}
+
+.text-area .content {
+    -fx-background-color: black;
+}
+
+/*
+#programArea .text {
+	-fx-fill: white;
+}
+
+#programArea {
+	-fx-background-color: black;
+}*/
+
+.root {
+    /*-fx-font-family: "DejaVu Sans";*/
+    /*-fx-base: rgb(132, 145, 47);
+    -fx-background: rgb(225, 228, 203);*/
+}

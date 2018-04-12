@@ -1,0 +1,71 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Claudio Bertoncello">
+   <meta name="GENERATOR" content="Mozilla/4.5 [it] (Win98; I) [Netscape]">
+   <title>rapporto sul lavoro fin qui svolto 1/2/2000</title>
+</head>
+<body>
+
+<h1>
+<font color="#000000">Modifiche effettuate al codice</font></h1>
+
+<h3>
+<font color="#000000">Elenco classi gi&agrave; esistenti e modificate:</font></h3>
+<font color="#000000"><a href="source/ControlStore.java">ControlStore.java</a>&nbsp;
+: E' stato aggiunto un metodo per il settaggio di una singola microistruzione
+in caso venga modificata a mano dall'utente</font>
+<br><font color="#000000"><a href="source/IJVMAssembler.java">IJVMAssembler.java</a>&nbsp;
+: Oltre al file oggetto genera un file .mne che serve per la visualizzazione
+simbolica della main memory</font>
+<br><font color="#000000"><a href="source/IJVMMethod.java">IJVMMethod.java
+</a>:
+e' stato modificato il metodo generate e aggiunto un metodo generateLabels
+per scrivere i dati di interesse del metodo sul file .mne</font>
+<br><font color="#000000"><a href="source/Mic1Constants.java">Mic1Constants.java</a>
+: Sono stati aggiunti i magic number per i file .mne e la dimensione della
+porzione di memoria visualizzata di main memory</font>
+<br><font color="#000000"><a href="source/MainMemory.java">MainMemory.java
+</a>: Si e' aggiunto il settaggio di variabili statiche di mic1sim che
+permettono di aggiornare la porzione di memoria visualizzata se questa
+viene modificata durante l'esecuzione del programma</font>
+<br><font color="#000000"><a href="source/Mic1Instruction.java">Mic1Instruction.java</a>
+: e' stato aggiunto un metodo per la conversione di una microistruzione
+in un numero e per settare una microistruzione dato un numero</font>
+<br><font color="#000000"><a href="source/MPC.java">MPC.java</a>: E' stato
+aggiunto il metodo getValue() che ritorna il valore corrente del mpc</font>
+<br><font color="#000000"><a href="source/PC.java">PC.java</a> : E' stato
+aggiunto il metodo getValue() che ritorna il valore corrente del pc</font>
+<br><font color="#000000"><a href="source/mic1sim.java">mic1sim.java </a>:
+Nel metodo init() viene aggiunto il menu windows per aprire le finestre(control
+store, main memory, debug )</font>
+<br><font color="#000000">Nei vari metodi vengono aggiunte istruzioni per
+gestire i dati visualizzati dai vari frames se aperti in quel momento.</font>
+<br><font color="#000000">E' stato aggiunto il metodo macroStep per poter
+effettuare una macroistruzione alla volta ( controllare se la prima istruzione
+del microcodice viene sempre&nbsp; memorizzata all'indirizzo 0x2 nella
+control store)</font>
+<br><font color="#000000">Nel metodo loadProgram viene caricato anche il
+file con estensione .mne</font>
+<h3>
+<font color="#000000">Elenco classi create:</font></h3>
+<font color="#000000"><a href="source/ControlStoreFrame.java">ControlStoreFrame.java</a>
+: Frame dove viene visualizzata la control store</font>
+<br><font color="#000000"><a href="source/ControlStoreModel.java">ControlStoreModel.java</a>
+: Modello dei dati per il frame della control store</font>
+<br><font color="#000000"><a href="source/MainMemoryFrame.java">MainMemoryFrame.java</a>
+: Frame dove viene visualizzata la main memory</font>
+<br><font color="#000000"><a href="source/MainMemoryModel.java">MainMemoryModel.java
+</a>:
+Modello dei dati per il frame della main memory</font>
+<br><font color="#000000"><a href="source/MNELoader.java">MNELoader.java</a>
+: classe che si occupa di caricare il file con i mnemonici per la visualizzazione
+nel frame della main memory</font>
+<br><font color="#000000">OutRangeNumberException.java :</font>
+<br><font color="#000000"><a href="source/Simbol.java">Simbol.java</a>
+: classe che essenzialmente implementa una struttura del tipo stringa e
+indirizzo, utilizzata per la visualizzazione delle label simboliche nel
+frame della mein memory</font>
+</body>
+</html>

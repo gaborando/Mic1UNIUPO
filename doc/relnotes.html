@@ -1,0 +1,288 @@
+<HTML>
+<HEAD>
+<TITLE>mic1 Release Notes</TITLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<H1>mic1 Release Notes</H1>
+<P>
+1999/5/5
+<P>
+
+<H3>Version 1.0c</H3>
+<P>
+The following corrections have been made to previously 
+released software and are available in this release.
+<P>
+
+<OL>
+<LI>
+Add tests for method calls, local variables and constants to ijvmtest.jas.
+<I>
+-- Fixed. 1999/4/11
+</I>
+<P>
+
+<LI>
+Add numbers to sections in user guide.
+<I>
+-- Done. 1999/4/11.
+Also added table of contents to user guide, and MAL spec, and cleaned
+up some formatting in IJVM spec as well.
+</I>
+<P>
+
+<LI>
+Document method calls in IJVM. --
+<I>
+-- Done. 1999/4/11.
+This is described in the IJVM lang spec.  An extended example appears
+in the FAQ.</I>
+<P>
+
+<LI>
+Document constant declarations in IJVM. --
+<I>
+-- Done. 1999/4/11.
+This is in the IJVM lang spec.</I>
+<P>
+
+<LI>
+Document new IJVM instructions IN, OUT, ERR, and HLT. --
+<I>
+-- Done. 1999/4/11.
+These are described in the IJVM language spec.  Examples are 
+given for IN and OUT.
+</I>
+<P>
+
+<LI>
+Document mechanism which allows ijvmasm to declare local variables 
+in the main program.
+<I>
+-- Done. 1999/4/11.
+This is documented in the lang spec, including an example.
+</I>
+<P>
+
+<LI>
+Add a section to user_guide.html called "2. Files", which provides a 
+brief description of  each of the files included in the distribution.
+<I>
+-- Done.  1999/5/5.
+</I>
+<P>
+
+<LI>
+Remove sections from relnotes.html which refer to changes made before the 
+first official release.
+<I>
+-- Done. 1999/5/5.
+</I>
+<P>
+
+<LI>
+Reduce the number of iterations in ijvmtest from 100 to 20.  It takes 30 
+seconds on a 330 MHz Sun Ultra II.
+<I>
+-- Done. 1999/5/5.
+</I>
+<P>
+
+<LI>
+Include the assembly and execution of ijvmtest as a step in the
+installation procedure.
+<I>
+-- Done.  1999/5/5.
+</I>
+<P>
+
+<LI>
+In the simulator window, remove the cursor at the end of the values
+in each text field.
+<I>
+-- Done.  Changed the fields from editable to non-editable. 
+1999/5/5.
+</I>
+<P>
+
+<LI>
+Document the various file types: *.mic1, *.ijvm, etc.
+<I>
+-- Done.  Added to new section "2. Files". 1999/5/5.
+</I>
+<P>
+
+
+</OL>
+
+<H3>To Do (proposed for the <EM>next</EM> version release)</H3>
+<P>
+Note: A number of the following have been completed in some form
+or another.  We're still in the process of reviewing each
+item before we check them off this list.
+<P>
+
+<OL>
+<LI>
+Change ijvmasm to allow numeric arguments to ILOAD and ISTORE,
+not just variable names declared between ".var" and ".end-var".
+This would require some significant changes to the assembler, 
+but would be more in keeping with Jasmine.  The ".var" directive
+of Jasmine allows you to associate a name with a variable number,
+but all IINC, ILOAD and ISTORE instructions would still reference the
+number (not the name).  
+<P>
+Another complication is that the 
+assembler would need to scan for the maximum variable number of
+all IINC, ILOAD, and ISTORE instructions and consider the number
+of parameters passed, rather than simply count the number of 
+parameters and variables given.  The current approach requires
+that all local variables and parameters get symbolic names.
+<P>
+
+<LI>
+Eliminate "spasticness" in the startup of the simulator.
+<P>
+
+<LI>
+Fix echo.jas to correct non-print-characters being echoed as space.
+<P>
+
+<LI>
+Document add.jas in the user guide to explain how it works.
+<P>
+
+<LI>
+Document echo.jas in the user guide to explain how it works.
+<P>
+
+<LI>
+Modify add.jas to give a message each time through the loop, 
+like  "Please type two numbers, each terminated by ENTER."
+Also, output a blank line before that message again.
+<P>
+
+<LI>
+Eliminate manual page files by combining this information into 
+primary documentation.
+<P>
+
+<LI>
+Explain how to set CLASSPATH on various platforms, and what to
+do if you already have one.
+<P>
+
+<LI>
+The IJVM Assembly Language Specification is perhaps misnamed.
+This includes some specific information about the assembler
+(e.g., ijvm.conf).   We should consider renaming this and the
+MAL Micro-assemply Language Specification.
+<P>
+
+<LI>
+Allow a BELL character to be sent to standard output
+<P>
+
+<LI>
+Create mailing list.
+<!--
+rayo@ontko.com (Ray Ontko),
+dans@ontko.com (Dan Stone),
+ast@cs.vu.nl (Andy Tanenbaum),
+Ana_Terry@prenhall.com (Ana Terry),
+Alan_Apt@prenhall.com (Alan Apt),
+ladrian@cs.sunysb.edu (Adrian Llahana), 
+jmiller@silos.cs.csbsju.edu (John Miller),
+-->
+<P>
+
+<LI>
+Some of the material in the faq.html duplicate material in the
+other manuals.  Shorten it by not including things described elsewhere.
+For example, you might have a question "How do I do I/O?"  With answer:
+"Use the IN and OUT instructions.  These are discussed in Section 7
+of jas.html." and then move the full discussion there.
+<P>
+
+</OL>
+
+<H3>To Do (proposed for some future release)</H3>
+<P>
+
+<OL>
+<LI>
+Modify mic1sim to allow memory in the neighborhood of SP, PC, MAR, LV, CPP 
+(or elsewhere) to be displayed, or even modified.
+<I>
+This is mostly just a matter of deciding how to make this intuitive and
+attractive, and then writing the code.  
+</I>
+<B>
+If you have suggestions about
+what it should look like on the screen, or what buttons/menu items/etc
+should be used, send a note to 
+</B>
+Dan Stone (<A HREF="mailto:dans@ontko.com">dans@ontko.com</A>).
+<P>
+
+<LI>
+Rework the Windows install to use an appropriate Windows-style 
+install program.  
+<I>
+Casual users may be better served by having a 
+familiar interface to find the java executable, set up the class
+path, etc.  
+</I>
+<B>
+We will gladly accept help from anyone who is familiar
+with Windows install tools and setting up Java applications under
+Windows 95/98/NT.
+</B>
+<P>
+
+<LI>
+Create a distribution for Macintosh.  
+<I>
+Now that Apple has a stable
+version of the JDK available, it should be reasonable to provide
+a distribution.  Now all we have to do is figure out how to do 
+binhex or whatever to do an install there.  
+</I>
+<B>
+We will gladly
+accept help from anyone who knows the Mac environment well
+and understands the issues of installing and running Java 
+software on a the Mac.
+</B>
+<P>
+
+<LI>
+Support multiple documentation file formats: html, ps, ascii, etc.
+<I>
+Our plan here is to convert the existing files to SGML, and then
+generate an appropriate collection of printable, browsable, viewable
+documents from a single source.  
+</I>
+<B>
+We will gladly accept help
+from anyone who knows SGML to get us started down this path.
+</B>
+<P>
+
+<LI>
+Set up bug tracking system: gnats vs. debian bug reporting system.
+<B>
+If you have experience with either of these systems (or any other
+free bug tracking system) and have an opinion about its suitability
+for the mic1 project, please send a note to 
+</B>
+Ray Ontko (<A HREF="mailto:rayo@ontko.com">rayo@ontko.com</A>).
+<P>
+
+</OL>
+<P>
+This page maintained by <A HREF="http://www.ontko.com/~rayo/">Ray Ontko</A>
+(<A HREF="mailto:rayo@ontko.com"><I>rayo@ontko.com</I></A>).
+</BODY>
+</HTML>
+

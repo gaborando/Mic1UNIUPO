@@ -1,0 +1,348 @@
+<HTML>
+<HEAD>
+<TITLE>Micro-Assembly Lanaguage (MAL) Specification</TITLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<H1>Micro-Assembly Language (MAL) Specification</H1>
+<P>
+Ray Ontko (<A HREF="mailto:rayo@ontko.com"><I>rayo@ontko.com</I></A>)
+<P>
+April 11, 1999
+<P>
+
+<H3>Contents</H3>
+<OL>
+<LI><A HREF="#1">Purpose</A>
+<LI><A HREF="#2">Lexical Elements</A>
+<LI><A HREF="#3">Syntactic Elements</A>
+<LI><A HREF="#4">Semantics</A>
+</OL>
+<P>
+
+<H3><A NAME="1">1. Purpose</A></H3>
+<P>
+This document is a brief introduction to Micro-Assembly Language (MAL),
+the language
+accepted by the mic1 micro-assembler.  It describes the
+lexical, syntactic, and semantic elements of the 
+language, and gives a 
+few pointers on microprogramming with the mic1 micro-assembler.
+<P>
+For a brief introduction to microprogramming and a 
+complete description of the
+microarchitecture targeted by the mic1 micro-assembler, consult Chapter 4,
+Tanenbaum, Andrew S.: <I>Structured Computer Organization, 4th Ed.</I>
+(Prentice-Hall 1999).
+<P>
+
+<H3><A NAME="2">2. Lexical Elements</A></H3>
+
+Like most assembly languages, the Micro-Assembly Language is a line-oriented
+language.  Each micro-instruction is generally defined on a single line
+of the program file.  Blank lines and lines containing only a comment
+are ignored. The end-of-line is generally significant.
+<P>
+Also, MAL is case-sensitive.  For example, "AND" is a 
+reserved word corresponding to a bitwise operation of the
+mic1 ALU, while "and" is not reserved and may be used as a 
+label (for an AND instruction which may occur in the ISA-level
+instruction set, for example).
+<P>
+
+<H4>2.1. Comments</H4>
+<P>
+All comments begin with two slash characters ("//") and 
+continue to the end of the line. 
+Blank lines, and lines consisting only of white space
+and comments are ignored by the micro-assembler.
+<P>
+
+<H4>2.2. Directives</H4>
+<P>
+Directives for the micro-assmebler begin with a period character (".")
+and may contain alphabetic characters.
+<P>
+There are two micro-assembler directives: ".default" and ".label".
+Directives are used to provide guide the behavior of the 
+micro-assembler, and do <EM>not</EM> correspond with words in 
+the control store.  These are defined more fully below.
+<P>
+
+<H4>2.3. Reserved Words</H4>
+<P>
+The names of registers and control lines are reserved, as are the 
+words "if", "else", "goto", "nop", "AND", "OR", and "NOT".  For the mic1
+architecture, the following words are reserved and may not be used as
+statement labels:
+<PRE>
+MAR
+MDR
+PC
+MBR
+MBRU
+SP
+LV
+CPP
+TOS
+OPC
+H
+Z
+N
+rd
+wr
+fetch
+if
+else
+goto
+nop
+AND
+OR
+NOT
+</PRE>
+<P>
+
+<H4>2.4. Decimal Literals</H4>
+<P>
+Decimal literals used by are one the following 
+numeric strings: "0", "1", "8".
+These are used as numeric constants in MAL.
+<P>
+
+<H4>2.5. Hexadecimal Literals</H4>
+<P>
+Hexadecimal literals are strings beginning 
+with "0x" and followed by one or more hexadecimal
+digits ("0"-"9") or letters ("a"-"f" or "A"-"F").  These are used as 
+addresses or address masks in MAL.
+<P>
+
+<H4>2.6. Special Characters</H4>
+<P>
+The following characters have special meaning in micro-assembly language:
+<PRE>
+(
+)
++
+-
+=
+;
+&lt;
+&gt;
+</PRE>
+<P>
+All characters and tokens which are not specifically described
+above are disallowed in MAL.
+<P>
+
+<H3><A NAME="3">3. Syntactic Elements</A></H3>
+<P>
+The following grammar describes the language accepted by
+the mic1 micro assembler.  <I>eol</I>, <I>label</I>, and 
+<I>address</I> (hexadecimal numeric literal), are terminal
+symbols, as are all strings enclosed in double-quotes (").
+All other symbols below are non-terminals.  "program" is the
+start symbol.
+<PRE>
+program ::= line_sequence 
+   ;
+
+line_sequence ::= line line_sequence 
+   |
+   ;
+
+line ::= instruction <I>eol</I>
+       | directive <I>eol</I>
+       | <I>eol</I>
+       ;
+
+instruction ::= <I>label</I> statement_sequence
+              | statement_sequence
+              | <I>label</I>
+              ;
+
+directive ::= ".label" <I>label</I> <I>address</I> 
+            | ".default" statement_sequence
+            ;
+
+statement_sequence ::= statement ";" statement_sequence 
+                     | statement ";"
+                     | statement
+                     ;
+
+statement ::= io_statement 
+            | control_statement 
+            | assignment_statement 
+            | nop_statement
+            ;
+
+io_statement ::= "rd"
+               | "wr" 
+               | "fetch" 
+               ; 
+
+control_statement ::= if_statement 
+                    | multiway_branch_statement 
+                    | goto_statement
+                    ;
+
+if_statement ::= "if" "(" condition ")" "goto" <I>label</I> ";" "else" "goto" <I>label</I>
+             ;
+
+condition ::= "N"
+            | "Z"
+            ;
+
+multiway_branch_statement ::= "goto" "(" mb_expr ")"
+                            ;
+
+mb_expr ::= "MBR" "OR" <I>address</I>
+          | "MBR" 
+          ;
+
+goto_statement ::= "goto" <I>label</I>
+                 ;
+
+assignment_statement ::= target "=" assignment_statement
+                       | expr 
+                       ;
+
+target ::= c_register
+         | "N"
+         | "Z"
+         ;
+
+c_register ::= "MAR" 
+             | "MDR" 
+             | "PC" 
+             | "SP" 
+             | "LV" 
+             | "CPP" 
+             | "TOS" 
+             | "OPC" 
+             | "H" 
+             ;
+
+expr ::= operation 
+       | operation "&lt;" "&lt;" "8"
+       | operation "&gt;" "&gt;" "1"
+       ;
+
+operation ::= a_term "AND" b_term 
+            | b_term "AND" a_term
+            | a_term "OR" b_term 
+            | b_term "OR" a_term 
+            | "NOT" b_term
+            | "NOT" a_term
+            | b_term "+" a_term 
+            | a_term "+" b_term 
+            | b_term "+" "1"
+            | a_term "+" "1"
+            | b_term "-" a_term
+            | "-" a_term
+            | b_term "-" "1"
+            | b_term "+" a_term "+" "1"
+            | a_term "+" b_term "+" "1"
+            | b_term 
+            | a_term
+            | "-" "1"
+            | "0"
+            | "1"
+            ;
+
+b_term ::= "MDR" 
+         | "PC" 
+         | "MBR" 
+         | "MBRU" 
+         | "SP" 
+         | "LV" 
+         | "CPP" 
+         | "TOS" 
+         | "OPC" 
+         ;
+
+a_term ::= "H" 
+         ;
+
+nop_statement ::= "nop"
+                ;
+</PRE>
+<P>
+
+<H3><A NAME="4">4. Semantics</A></H3>
+
+<H4>4.1. Directive Semantics</H4>
+
+<H5>.default</H5>
+<P>
+The .default directive allows us to specify
+a default instruction to place in any unused addresses of the 
+control store.  For example:
+<PRE>
+.default	goto err1
+</PRE>
+<P>
+This would help "catch" any unintended multiway branches which
+are not explicitly accounted for in the microcode.
+<P>
+
+<H5>.label</H5>
+<P>
+Labeled statements are "anchored" at the specified control store address.
+Any statement having the label will be located at that specific location
+in the control store.  
+This directive allows the multiway branch statemnts such as
+"goto (MBR)" or "goto (MBR OR 0x100)" to dispatch to a known location.
+<PRE>
+.label	nop1		0x00
+.label	bipush1		0x10
+</PRE>
+<P>
+
+<H4>4.2 Statement Semantics</H4>
+<P>
+Lines which contain a label, a statement_sequence, or both a label and a 
+statement_sequence are considered to be specifiers for a micro-instruction,
+that is, for a word in the control store.
+<P>
+
+If a line begins with a label, its statement may be the target of an
+explicit goto.
+<P>
+
+If a statement contains an explicit goto label, there must be a statement
+having that label as its statement label.
+<P>
+
+Register names which appear to the left of an equal sign ("=") correspond
+to control lines which are enabled to <EM>load</EM> the register from 
+the C bus.
+<P>
+
+Register names which appear without an equal sign ("=") or to the right 
+of the right-most equal sign correspond to control lines which are 
+enabled to put register values on the A or B buses as inputs to the ALU.
+<P>
+
+The tokens "+", "-", "&lt;", "&gt;", "AND", "OR", "NOT", "0", "1", 
+and "8" which appear without an equal sign ("=") or to the right of the 
+right-most equal sign are used to determine which control lines are asserted
+as inputs to the ALU and the SHIFT register.
+<P>
+
+"rd", "wr", and "fetch", cause the appropriate bits to 
+be set in the control store for enabling the corresponding control lines.
+<P>
+
+"if", "else", and "goto" are used to set the JAMN, JAMZ, and JMPC, bits
+of the micro-instruction, along with the NEXT_ADDRESS field.
+<P>
+
+"nop" is a place-holder which allows us to have a do-nothing instruction
+without a label.
+<P>
+
+For a complete example of a mic1 micro-program see <A HREF="mic1ijvm.mal">
+mic1ijvm.mal</A> which implements an interpreter for a simplified 
+(integer) subset of a Java Virtual Machine.
+</BODY>
+</HTML>

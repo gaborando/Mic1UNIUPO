@@ -1,0 +1,3 @@
+ class OutRangeNumberException extends Exception{
+
+}
