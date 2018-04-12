@@ -48,194 +48,194 @@
 // default instruction to place in any unused addresses of the control store
 .default    goto err1
 
-Main1   PC = PC + 1; fetch; goto (MBR)  // MBR holds opcode; get next byte; dispatch
+Main1   mic1.PC = mic1.PC + 1; fetch; goto (mic1.MBR)  // mic1.MBR holds opcode; get next byte; dispatch
 
 nop1    goto Main1          // Do nothing
 
-iadd1   MAR = SP = SP - 1; rd       // Read in next-to-top word on stack
+iadd1   mic1.MAR = SP = SP - 1; rd       // Read in next-to-top word on stack
 iadd2   H = TOS             // H = top of stack
-iadd3   MDR = TOS = MDR + H; wr; goto Main1 // Add top two words; write to top of stack
+iadd3   mic1.MDR = TOS = mic1.MDR + H; wr; goto Main1 // Add top two words; write to top of stack
 
-isub1   MAR = SP = SP - 1; rd       // Read in next-to-top word on stack
+isub1   mic1.MAR = SP = SP - 1; rd       // Read in next-to-top word on stack
 isub2   H = TOS             // H = top of stack
-isub3   MDR = TOS = MDR - H; wr; goto Main1 // Do subtraction; write to top of stack
+isub3   mic1.MDR = TOS = mic1.MDR - H; wr; goto Main1 // Do subtraction; write to top of stack
 
-iand1   MAR = SP = SP - 1; rd       // Read in next-to-top word on stack
+iand1   mic1.MAR = SP = SP - 1; rd       // Read in next-to-top word on stack
 iand2   H = TOS             // H = top of stack
-iand3   MDR = TOS = MDR AND H; wr; goto Main1   // Do AND; write to new top of stack
+iand3   mic1.MDR = TOS = mic1.MDR AND H; wr; goto Main1   // Do AND; write to new top of stack
 
-ior1    MAR = SP = SP - 1; rd       // Read in next-to-top word on stack
+ior1    mic1.MAR = SP = SP - 1; rd       // Read in next-to-top word on stack
 ior2    H = TOS             // H = top of stack
-ior3    MDR = TOS = MDR OR H; wr; goto Main1    // Do OR; write to new top of stack
+ior3    mic1.MDR = TOS = mic1.MDR OR H; wr; goto Main1    // Do OR; write to new top of stack
 
-dup1    MAR = SP = SP + 1       // Increment SP and copy to MAR
-dup2    MDR = TOS; wr; goto Main1   // Write new stack word
+dup1    mic1.MAR = SP = SP + 1       // Increment SP and copy to mic1.MAR
+dup2    mic1.MDR = TOS; wr; goto Main1   // Write new stack word
 
-pop1    MAR = SP = SP - 1; rd       // Read in next-to-top word on stack
+pop1    mic1.MAR = SP = SP - 1; rd       // Read in next-to-top word on stack
 pop2                    // Wait for new TOS to be read from memory
-pop3    TOS = MDR; goto Main1       // Copy new word to TOS
+pop3    TOS = mic1.MDR; goto Main1       // Copy new word to TOS
 
-swap1   MAR = SP - 1; rd        // Set MAR to SP - 1; read 2nd word from stack
-swap2   MAR = SP            // Set MAR to top word
-swap3   H = MDR; wr         // Save TOS in H; write 2nd word to top of stack
-swap4   MDR = TOS           // Copy old TOS to MDR
-swap5   MAR = SP - 1; wr        // Set MAR to SP - 1; write as 2nd word on stack
+swap1   mic1.MAR = SP - 1; rd        // Set mic1.MAR to SP - 1; read 2nd word from stack
+swap2   mic1.MAR = SP            // Set mic1.MAR to top word
+swap3   H = mic1.MDR; wr         // Save TOS in H; write 2nd word to top of stack
+swap4   mic1.MDR = TOS           // Copy old TOS to mic1.MDR
+swap5   mic1.MAR = SP - 1; wr        // Set mic1.MAR to SP - 1; write as 2nd word on stack
 swap6   TOS = H; goto Main1     // Update TOS
 
-bipush1 SP = MAR = SP + 1       // MBR = the byte to push onto stack
-bipush2 PC = PC + 1; fetch      // Increment PC, fetch next opcode
-bipush3 MDR = TOS = MBR; wr; goto Main1 // Sign-extend constant and push on stack
+bipush1 SP = mic1.MAR = SP + 1       // mic1.MBR = the byte to push onto stack
+bipush2 mic1.PC = mic1.PC + 1; fetch      // Increment mic1.PC, fetch next opcode
+bipush3 mic1.MDR = TOS = mic1.MBR; wr; goto Main1 // Sign-extend constant and push on stack
 
 
-iload1  H = LV              // MBR contains index; copy LV to H
-iload2  MAR = MBRU + H; rd      // MAR = address of local variable to push
-iload3  MAR = SP = SP + 1       // SP points to new top of stack; prepare write
-iload4  PC = PC + 1; fetch; wr      // Inc PC; get next opcode; write top of stack
-iload5  TOS = MDR; goto Main1       // Update TOS
+iload1  H = LV              // mic1.MBR contains index; copy LV to H
+iload2  mic1.MAR = MBRU + H; rd      // mic1.MAR = address of local variable to push
+iload3  mic1.MAR = SP = SP + 1       // SP points to new top of stack; prepare write
+iload4  mic1.PC = mic1.PC + 1; fetch; wr      // Inc mic1.PC; get next opcode; write top of stack
+iload5  TOS = mic1.MDR; goto Main1       // Update TOS
 
-istore1 H = LV              // MBR contains index; Copy LV to H
-istore2 MAR = MBRU + H          // MAR = address of local variable to store into
-istore3 MDR = TOS; wr           // Copy TOS to MDR; write word
-istore4 SP = MAR = SP - 1; rd       // Read in next-to-top word on stack
-istore5 PC = PC + 1; fetch      // Increment PC; fetch next opcode
-istore6 TOS = MDR; goto Main1       // Update TOS
+istore1 H = LV              // mic1.MBR contains index; Copy LV to H
+istore2 mic1.MAR = MBRU + H          // mic1.MAR = address of local variable to store into
+istore3 mic1.MDR = TOS; wr           // Copy TOS to mic1.MDR; write word
+istore4 SP = mic1.MAR = SP - 1; rd       // Read in next-to-top word on stack
+istore5 mic1.PC = mic1.PC + 1; fetch      // Increment mic1.PC; fetch next opcode
+istore6 TOS = mic1.MDR; goto Main1       // Update TOS
 
 
-wide1   PC = PC + 1;fetch; goto (MBR OR 0x100)
+wide1   mic1.PC = mic1.PC + 1;fetch; goto (mic1.MBR OR 0x100)
    
 
-wide_iload1 PC = PC + 1; fetch  // MBR contains 1st index byte; fetch 2nd
+wide_iload1 mic1.PC = mic1.PC + 1; fetch  // mic1.MBR contains 1st index byte; fetch 2nd
 wide_iload2 H = MBRU << 8       // H = 1st index byte shifted left 8 bits
 wide_iload3 H = MBRU OR H       // H = 16-bit index of local variable
-wide_iload4 MAR = LV + H; rd; goto iload3   // MAR = address of local variable to push
+wide_iload4 mic1.MAR = LV + H; rd; goto iload3   // mic1.MAR = address of local variable to push
 
-wide_istore1    PC = PC + 1; fetch  // MBR contains 1st index byte; fetch 2nd
+wide_istore1    mic1.PC = mic1.PC + 1; fetch  // mic1.MBR contains 1st index byte; fetch 2nd
 wide_istore2    H = MBRU << 8       // H = 1st index byte shifted left 8 bits
 wide_istore3    H = MBRU OR H       // H = 16-bit index of local variable
-wide_istore4    MAR = LV + H; goto istore3  // MAR = address of local variable to store into
+wide_istore4    mic1.MAR = LV + H; goto istore3  // mic1.MAR = address of local variable to store into
 
-ldc_w1  PC = PC + 1; fetch      // MBR contains 1st index byte; fetch 2nd
+ldc_w1  mic1.PC = mic1.PC + 1; fetch      // mic1.MBR contains 1st index byte; fetch 2nd
 ldc_w2  H = MBRU << 8           // H = 1st index byte << 8
 ldc_w3  H = MBRU OR H           // H = 16-bit index into constant pool
-ldc_w4  MAR = H + CPP; rd; goto iload3  // MAR = address of constant in pool
+ldc_w4  mic1.MAR = H + CPP; rd; goto iload3  // mic1.MAR = address of constant in pool
 
-iinc1   H = LV              // MBR contains index; Copy LV to H
-iinc2   MAR = MBRU + H; rd      // Copy LV + index to MAR; Read variable
-iinc3   PC = PC + 1; fetch      // Fetch constant
-iinc4   H = MDR             // Copy variable to H
-iinc5   PC = PC + 1; fetch      // Fetch next opcode
-iinc6   MDR = MBR + H; wr; goto Main1   // Put sum in MDR; update variable
+iinc1   H = LV              // mic1.MBR contains index; Copy LV to H
+iinc2   mic1.MAR = MBRU + H; rd      // Copy LV + index to mic1.MAR; Read variable
+iinc3   mic1.PC = mic1.PC + 1; fetch      // Fetch constant
+iinc4   H = mic1.MDR             // Copy variable to H
+iinc5   mic1.PC = mic1.PC + 1; fetch      // Fetch next opcode
+iinc6   mic1.MDR = mic1.MBR + H; wr; goto Main1   // Put sum in mic1.MDR; update variable
 
-goto1   OPC = PC - 1            // Save address of opcode.
-goto2   PC = PC + 1; fetch      // MBR = 1st byte of offset; fetch 2nd byte
-goto3   H = MBR << 8            // Shift and save signed first byte in H
+goto1   OPC = mic1.PC - 1            // Save address of opcode.
+goto2   mic1.PC = mic1.PC + 1; fetch      // mic1.MBR = 1st byte of offset; fetch 2nd byte
+goto3   H = mic1.MBR << 8            // Shift and save signed first byte in H
 goto4   H = MBRU OR H           // H = 16-bit branch offset
-goto5   PC = OPC + H; fetch     // Add offset to OPC
+goto5   mic1.PC = OPC + H; fetch     // Add offset to OPC
 goto6   goto Main1          // Wait for fetch of next opcode
 
-iflt1   MAR = SP = SP - 1; rd       // Read in next-to-top word on stack
+iflt1   mic1.MAR = SP = SP - 1; rd       // Read in next-to-top word on stack
 iflt2   OPC = TOS           // Save TOS in OPC temporarily
-iflt3   TOS = MDR           // Put new top of stack in TOS
+iflt3   TOS = mic1.MDR           // Put new top of stack in TOS
 iflt4   N = OPC; if (N) goto T; else goto F // Branch on N bit
 
-ifeq1   MAR = SP = SP - 1; rd       // Read in next-to-top word of stack
+ifeq1   mic1.MAR = SP = SP - 1; rd       // Read in next-to-top word of stack
 ifeq2   OPC = TOS           // Save TOS in OPC temporarily
-ifeq3   TOS = MDR           // Put new top of stack in TOS
+ifeq3   TOS = mic1.MDR           // Put new top of stack in TOS
 ifeq4   Z = OPC; if (Z) goto T; else goto F // Branch on Z bit
 
-if_icmpeq1  MAR = SP = SP - 1; rd   // Read in next-to-top word of stack
-if_icmpeq2  MAR = SP = SP - 1   // Set MAR to read in new top-of-stack
-if_icmpeq3  H = MDR; rd     // Copy second stack word to H
+if_icmpeq1  mic1.MAR = SP = SP - 1; rd   // Read in next-to-top word of stack
+if_icmpeq2  mic1.MAR = SP = SP - 1   // Set mic1.MAR to read in new top-of-stack
+if_icmpeq3  H = mic1.MDR; rd     // Copy second stack word to H
 if_icmpeq4  OPC = TOS       // Save TOS in OPC temporarily
-if_icmpeq5  TOS = MDR       // Put new top of stack in TOS
+if_icmpeq5  TOS = mic1.MDR       // Put new top of stack in TOS
 if_icmpeq6  Z = OPC - H; if (Z) goto T; else goto F // If top 2 words are equal, goto T, else goto F
 
-T   OPC = PC - 1; fetch; goto goto2 // Same as goto1; needed for target address
+T   OPC = mic1.PC - 1; fetch; goto goto2 // Same as goto1; needed for target address
 
-F   PC = PC + 1         // Skip first offset byte
-F2  PC = PC + 1; fetch      // PC now points to next opcode
+F   mic1.PC = mic1.PC + 1         // Skip first offset byte
+F2  mic1.PC = mic1.PC + 1; fetch      // mic1.PC now points to next opcode
 F3  goto Main1          // Wait for fetch of opcode
 
-invokevirtual1  PC = PC + 1; fetch  // MBR = index byte 1; inc. PC, get 2nd byte
+invokevirtual1  mic1.PC = mic1.PC + 1; fetch  // mic1.MBR = index byte 1; inc. mic1.PC, get 2nd byte
 invokevirtual2  H = MBRU << 8       // Shift and save first byte in H
 invokevirtual3  H = MBRU OR H       // H = offset of method pointer from CPP
-invokevirtual4  MAR = CPP + H; rd   // Get pointer to method from CPP area
-invokevirtual5  OPC = PC + 1        // Save Return PC in OPC temporarily
-invokevirtual6  PC = MDR; fetch     // PC points to new method; get param count
-invokevirtual7  PC = PC + 1; fetch  // Fetch 2nd byte of parameter count
+invokevirtual4  mic1.MAR = CPP + H; rd   // Get pointer to method from CPP area
+invokevirtual5  OPC = mic1.PC + 1        // Save Return mic1.PC in OPC temporarily
+invokevirtual6  mic1.PC = mic1.MDR; fetch     // mic1.PC points to new method; get param count
+invokevirtual7  mic1.PC = mic1.PC + 1; fetch  // Fetch 2nd byte of parameter count
 invokevirtual8  H = MBRU << 8       // Shift and save first byte in H
 invokevirtual9  H = MBRU OR H       // H = number of parameters
-invokevirtual10 PC = PC + 1; fetch  // Fetch first byte of # locals
+invokevirtual10 mic1.PC = mic1.PC + 1; fetch  // Fetch first byte of # locals
 invokevirtual11 TOS = SP - H        // TOS = address of OBJREF - 1
-invokevirtual12 TOS = MAR = TOS + 1 // TOS = address of OBJREF (new LV)
-invokevirtual13 PC = PC + 1; fetch  // Fetch second byte of # locals
+invokevirtual12 TOS = mic1.MAR = TOS + 1 // TOS = address of OBJREF (new LV)
+invokevirtual13 mic1.PC = mic1.PC + 1; fetch  // Fetch second byte of # locals
 invokevirtual14 H = MBRU << 8       // Shift and save first byte in H
 invokevirtual15 H = MBRU OR H       // H = # locals
-invokevirtual16 MDR = SP + H + 1; wr    // Overwrite OBJREF with link pointer
-invokevirtual17 MAR = SP = MDR;     // Set SP, MAR to location to hold old PC
-invokevirtual18 MDR = OPC; wr       // Save old PC above the local variables
-invokevirtual19 MAR = SP = SP + 1   // SP points to location to hold old LV
-invokevirtual20 MDR = LV; wr        // Save old LV above saved PC
-invokevirtual21 PC = PC + 1; fetch  // Fetch first opcode of new method.
+invokevirtual16 mic1.MDR = SP + H + 1; wr    // Overwrite OBJREF with link pointer
+invokevirtual17 mic1.MAR = SP = mic1.MDR;     // Set SP, mic1.MAR to location to hold old mic1.PC
+invokevirtual18 mic1.MDR = OPC; wr       // Save old mic1.PC above the local variables
+invokevirtual19 mic1.MAR = SP = SP + 1   // SP points to location to hold old LV
+invokevirtual20 mic1.MDR = LV; wr        // Save old LV above saved mic1.PC
+invokevirtual21 mic1.PC = mic1.PC + 1; fetch  // Fetch first opcode of new method.
 invokevirtual22 LV = TOS; goto Main1    // Set LV to point to LV Frame
 
-ireturn1    MAR = SP = LV; rd   // Reset SP, MAR to get link pointer
+ireturn1    mic1.MAR = SP = LV; rd   // Reset SP, mic1.MAR to get link pointer
 ireturn2                // Wait for read
-ireturn3    LV = MAR = MDR; rd  // Set LV to link ptr; get old PC
-ireturn4    MAR = LV + 1        // Set MAR to read old LV
-ireturn5    PC = MDR; rd; fetch // Restore PC; fetch next opcode
-ireturn6    MAR = SP        // Set MAR to write TOS
-ireturn7    LV = MDR        // Restore LV
-ireturn8    MDR = TOS; wr; goto Main1   // Save return value on original top of stack
+ireturn3    LV = mic1.MAR = mic1.MDR; rd  // Set LV to link ptr; get old mic1.PC
+ireturn4    mic1.MAR = LV + 1        // Set mic1.MAR to read old LV
+ireturn5    mic1.PC = mic1.MDR; rd; fetch // Restore mic1.PC; fetch next opcode
+ireturn6    mic1.MAR = SP        // Set mic1.MAR to write TOS
+ireturn7    LV = mic1.MDR        // Restore LV
+ireturn8    mic1.MDR = TOS; wr; goto Main1   // Save return value on original top of stack
 
 halt1   goto halt1
 
 err1    OPC=H=-1
         OPC=H+OPC
-        MAR=H+OPC           // compute IO address
+        mic1.MAR=H+OPC           // compute IO address
     OPC=H=1             // 1
     OPC=H=H+OPC         // 10
     OPC=H=H+OPC         // 100
     OPC=H=H+OPC         // 1000
     OPC=H=H+OPC+1           // 10001
     OPC=H=H+OPC         // 100010
-    MDR=H+OPC+1;wr          // 1000101 'E'
+    mic1.MDR=H+OPC+1;wr          // 1000101 'E'
     OPC=H=1             // 1
     OPC=H=H+OPC         // 10
     OPC=H=H+OPC+1           // 101
     OPC=H=H+OPC         // 1010
     OPC=H=H+OPC         // 10100
     OPC=H=H+OPC+1           // 101001
-    MDR=H+OPC;wr            // 1010010 'R'
+    mic1.MDR=H+OPC;wr            // 1010010 'R'
         nop
-    MDR=H+OPC;wr            // 1010010 'R'
+    mic1.MDR=H+OPC;wr            // 1010010 'R'
     OPC=H=1             // 1
     OPC=H=H+OPC         // 10
     OPC=H=H+OPC         // 100
     OPC=H=H+OPC+1           // 1001
     OPC=H=H+OPC+1           // 10011
     OPC=H=H+OPC+1           // 100111
-    MDR=H+OPC+1;wr          // 1001111 'O'
+    mic1.MDR=H+OPC+1;wr          // 1001111 'mic1.O'
     OPC=H=1             // 1
     OPC=H=H+OPC         // 10
     OPC=H=H+OPC+1           // 101
     OPC=H=H+OPC         // 1010
     OPC=H=H+OPC         // 10100
     OPC=H=H+OPC+1           // 101001
-    MDR=H+OPC;wr            // 1010010 'R'
+    mic1.MDR=H+OPC;wr            // 1010010 'R'
     goto halt1      
 
 out1    OPC=H=-1
         OPC=H+OPC
-        MAR=H+OPC           // compute OUT address
-    MDR=TOS; wr         // write to output
+        mic1.MAR=H+OPC           // compute OUT address
+    mic1.MDR=TOS; wr         // write to output
     nop
-    MAR=SP=SP-1; rd                 // decrement stack pointer
+    mic1.MAR=SP=SP-1; rd                 // decrement stack pointer
     nop
-    TOS=MDR; goto Main1
+    TOS=mic1.MDR; goto Main1
 
 in1 OPC=H=-1
         OPC=H+OPC
-        MAR=H+OPC;rd            // compute IN address ; read from input
-    MAR=SP=SP+1         // increment SP; wait for read
-    TOS=MDR;wr ; goto Main1     // Write 
+        mic1.MAR=H+OPC;rd            // compute IN address ; read from input
+    mic1.MAR=SP=SP+1         // increment SP; wait for read
+    TOS=mic1.MDR;wr ; goto Main1     // Write

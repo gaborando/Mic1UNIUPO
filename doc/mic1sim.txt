@@ -1,24 +1,24 @@
 
 
 
-mic1sim(1)                                             mic1sim(1)
+mic1.mic1sim(1)                                             mic1.mic1sim(1)
 
 
 NAME
-       mic1sim - mic1 simulator
+       mic1.mic1sim - mic1 simulator
 
 
 SYNOPSIS
-       java mic1sim
+       java mic1.mic1sim
 
 
 DESCRIPTION
-       mic1sim  simulates  the Mic-1 microprogrammed architecture
+       mic1.mic1sim  simulates  the Mic-1 microprogrammed architecture
        as described in Chapter 4 of Andrew S.  Tanenbaum,  Struc-
        tured Computer Organization, 4e, (Prentice-Hall, 1998).
 
 
-       mic1sim  provides  a means for step-by-step execution of a
+       mic1.mic1sim  provides  a means for step-by-step execution of a
        Mic-1 microprogram in the interpretation of an instruction
        set architecture (ISA-level) macroprogram.
 
@@ -44,7 +44,7 @@ AUTHOR
 
 
 SEE ALSO
-       mic1asm(1) and ijvmasm(1).
+       mic1.mic1asm(1) and mic1.ijvmasm(1).
 
 
 

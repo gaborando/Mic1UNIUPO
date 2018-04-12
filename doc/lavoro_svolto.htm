@@ -112,7 +112,7 @@ dal men&ugrave; a tendina relativo ai breackpoint.
 
 <p CLASS="msonormal" STYLE="margin-bottom: 0in">Si fa notare che nella
 versione originale, per visualizzare un messaggio di dialogo, si utilizzava
-una classe ErrorDialog creata appositamente. Si &egrave; deciso (viste
+una classe mic1.ErrorDialog creata appositamente. Si &egrave; deciso (viste
 anche le migliori potenzialit&agrave; grafiche) di utilizzare il metodo
 showMessageDialog della classe JoptionPane (di Javax.swing) e di estendere
 ove possibile questa modifica in modo di ottenere messaggi di errore tipo:
@@ -126,7 +126,7 @@ Modifica registri</font>
 <br>&nbsp;
 <div CLASS="msonormal" STYLE="margin-bottom: 0in">La modifica "al volo"
 dei registri non &egrave; stata possibile in quanto era impossibile cogliere
-l'evento di modifica (mentre nella gestione della MainMemory (Method Area)
+l'evento di modifica (mentre nella gestione della mic1.MainMemory (Method Area)
 e della Stack(Memory) &egrave; stato possibile grazie alla particolare
 tabella utilizzata: Jtable). Si &egrave; quindi optato per una modifica
 eseguita da un frame apposito.</div>
@@ -136,21 +136,21 @@ consistenti al codice originario sono quindi state:</div>
 
 <ul>
 <div CLASS="msonormal" STYLE="margin-bottom: 0in">- aggiunta di un pulsante
-Modify Register</div>
+Modify mic1.Register</div>
 
 <div CLASS="msonormal" STYLE="margin-bottom: 0in">&nbsp;
-<br>- creazione del nuovo file ModifyRegisterFrame.java (per la gestione
+<br>- creazione del nuovo file mic1.ModifyRegisterFrame.java (per la gestione
 del frame)</div>
 
 <div CLASS="msonormal" STYLE="margin-bottom: 0in">&nbsp;
 <br>- passaggio dalla dichiarazione private a public di variabili quali
-SP, PC ecc.</div>
+SP, mic1.PC ecc.</div>
 </ul>
 Il valore immesso deve essere non negativo per i valori di CPP, SP ed LV
 per problemi legati alla visualizzazione degli stessi nella terza colonna
 della Stack (Memory) se non e' attiva l'opzione "-n"
 <p>Si fa notare che la scelta dei registri da modificare e' vincolata da
-un menu a tendina in quanto non ha senso che registri quali il MPC&nbsp;
+un menu a tendina in quanto non ha senso che registri quali il mic1.MPC&nbsp;
 possano essere modificati.
 <br>&nbsp;
 <p>
@@ -166,8 +166,8 @@ sono state:
 <div STYLE="margin-bottom: 0in">- aggiunta di un elemento 'Memory' nel
 menu a tendina Windows</div>
 
-<div STYLE="margin-bottom: 0in">- creazione di due nuovi file: StackFrame.java
-e StackModel.java che servono rispettivamente per la visualizzazione e
+<div STYLE="margin-bottom: 0in">- creazione di due nuovi file: mic1.StackFrame.java
+e mic1.StackModel.java che servono rispettivamente per la visualizzazione e
 la gestione della Stack.
 <br>-possibilita' di specifica di un flag (-n)&nbsp; impostabile al momento
 del caricamento dell'emulatore (da riga di comando) che se presente inibisce
@@ -189,7 +189,7 @@ la sincronizzazione delle aree visualizzate.</div>
 
 <div STYLE="margin-left: 0.25in; text-indent: -0.25in; margin-bottom: 0in">In
 modo analogo alla gestione della Method Area si e' utilizzata una JTable
-(da javax.swing) ed il file StackModel.java e' stato creato appositamente
+(da javax.swing) ed il file mic1.StackModel.java e' stato creato appositamente
 per la gestione del modello della tabella (in modo da sfruttare tutte le
 primitive del modello riguardanti la modifica delle celle, la gestione
 degli eventi sul frame della Stack (Memory) ecc.).</div>

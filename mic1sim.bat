@@ -1,1 +1,1 @@
-java -jar mic1sim.jar
+java -jar mic1.mic1sim.jar

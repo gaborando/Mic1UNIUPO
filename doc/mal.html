@@ -44,7 +44,7 @@ are ignored. The end-of-line is generally significant.
 <P>
 Also, MAL is case-sensitive.  For example, "AND" is a 
 reserved word corresponding to a bitwise operation of the
-mic1 ALU, while "and" is not reserved and may be used as a 
+mic1 mic1.ALU, while "and" is not reserved and may be used as a
 label (for an AND instruction which may occur in the ISA-level
 instruction set, for example).
 <P>
@@ -75,10 +75,10 @@ words "if", "else", "goto", "nop", "AND", "OR", and "NOT".  For the mic1
 architecture, the following words are reserved and may not be used as
 statement labels:
 <PRE>
-MAR
-MDR
-PC
-MBR
+mic1.MAR
+mic1.MDR
+mic1.PC
+mic1.MBR
 MBRU
 SP
 LV
@@ -195,8 +195,8 @@ condition ::= "N"
 multiway_branch_statement ::= "goto" "(" mb_expr ")"
                             ;
 
-mb_expr ::= "MBR" "OR" <I>address</I>
-          | "MBR" 
+mb_expr ::= "mic1.MBR" "OR" <I>address</I>
+          | "mic1.MBR"
           ;
 
 goto_statement ::= "goto" <I>label</I>
@@ -211,9 +211,9 @@ target ::= c_register
          | "Z"
          ;
 
-c_register ::= "MAR" 
-             | "MDR" 
-             | "PC" 
+c_register ::= "mic1.MAR"
+             | "mic1.MDR"
+             | "mic1.PC"
              | "SP" 
              | "LV" 
              | "CPP" 
@@ -249,9 +249,9 @@ operation ::= a_term "AND" b_term
             | "1"
             ;
 
-b_term ::= "MDR" 
-         | "PC" 
-         | "MBR" 
+b_term ::= "mic1.MDR"
+         | "mic1.PC"
+         | "mic1.MBR"
          | "MBRU" 
          | "SP" 
          | "LV" 
@@ -291,7 +291,7 @@ Labeled statements are "anchored" at the specified control store address.
 Any statement having the label will be located at that specific location
 in the control store.  
 This directive allows the multiway branch statemnts such as
-"goto (MBR)" or "goto (MBR OR 0x100)" to dispatch to a known location.
+"goto (mic1.MBR)" or "goto (mic1.MBR OR 0x100)" to dispatch to a known location.
 <PRE>
 .label	nop1		0x00
 .label	bipush1		0x10
@@ -313,20 +313,20 @@ If a statement contains an explicit goto label, there must be a statement
 having that label as its statement label.
 <P>
 
-Register names which appear to the left of an equal sign ("=") correspond
+mic1.Register names which appear to the left of an equal sign ("=") correspond
 to control lines which are enabled to <EM>load</EM> the register from 
 the C bus.
 <P>
 
-Register names which appear without an equal sign ("=") or to the right 
+mic1.Register names which appear without an equal sign ("=") or to the right
 of the right-most equal sign correspond to control lines which are 
-enabled to put register values on the A or B buses as inputs to the ALU.
+enabled to put register values on the A or B buses as inputs to the mic1.ALU.
 <P>
 
 The tokens "+", "-", "&lt;", "&gt;", "AND", "OR", "NOT", "0", "1", 
 and "8" which appear without an equal sign ("=") or to the right of the 
 right-most equal sign are used to determine which control lines are asserted
-as inputs to the ALU and the SHIFT register.
+as inputs to the mic1.ALU and the SHIFT register.
 <P>
 
 "rd", "wr", and "fetch", cause the appropriate bits to 
