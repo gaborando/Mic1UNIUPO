@@ -1,5 +1,6 @@
 package mic1.gaborFix;
 
+import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
@@ -13,7 +14,11 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import mic1.IJVMAssembler;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.*;
 
 public class IJVMEditor extends RememberPositionJFrame
@@ -34,7 +39,7 @@ public class IJVMEditor extends RememberPositionJFrame
 		super("IJVM Editor");
 		fxPanel = new JFXPanel();
 		add(fxPanel);
-		setSize(400, 600);
+		setSize(getLastSize());
 		setVisible(true);
 		//setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		Scene scene = createScene();
@@ -42,6 +47,11 @@ public class IJVMEditor extends RememberPositionJFrame
 		this.builderProgramHandler = builderProgramHandler;
 		msg = new Label();
 
+		Platform.runLater( () -> {
+			String lastMacroprogramm = prefs.get("last_macroprogram",null);
+			if(lastMacroprogramm != null)
+				load(new File(lastMacroprogramm));
+		});
 
 
 	}
@@ -122,7 +132,7 @@ public class IJVMEditor extends RememberPositionJFrame
 			return null;
 		}
 		err.println("Compiling " + infile + "...");
-		ia = new IJVMAssembler(in, out, outfile,err, "ijvm.config");
+		ia = new IJVMAssembler(in, out, outfile,err, "ijvm.conf");
 		try {
 			in.close();
 			out.close();
@@ -158,12 +168,11 @@ public class IJVMEditor extends RememberPositionJFrame
 	}
 
 	private void loadDocument() {
-		FileDialog fd = new FileDialog(this, "Load Macroprogram", FileDialog.LOAD);
-		fd.setFile("*.jas");
-		fd.setVisible(true);
+		//FileDialog fd = new FileDialog(this, "Load Macroprogram", FileDialog.LOAD);
+		//fd.setFile("*.jas");
+		//fd.setVisible(true);
 		// fd.paintAll(fd.getGraphics());
 
-		/**
 		String initialDir = System.getProperty("user.dir");
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle("Load document");
@@ -171,12 +180,52 @@ public class IJVMEditor extends RememberPositionJFrame
 		fileChooser.setFileFilter(
 				new FileNameExtensionFilter("JAS file",  RTFX_FILE_EXTENSION));
 		fileChooser.showOpenDialog(this);
-		 */
-		File selectedFile = null;
-		if (fd.getFile() != null) {
-			selectedFile = new File(fd.getDirectory() + fd.getFile());
+		File selectedFile = fileChooser.getSelectedFile();
+		//if (fd.getFile() != null) {
+		//	selectedFile = new File(fd.getDirectory() + fd.getFile());
+		//}
+
+		load(selectedFile);
+	}
+	private void save(){
+		if(currentFile==null)
+			saveDocument();
+		else
+			save(currentFile);
+	}
+
+	private void saveDocument() {
+		//FileDialog fd = new FileDialog(this, "Save Macroprogram", FileDialog.SAVE);
+		//fd.setFile("*.jas");
+		//fd.setVisible(true);
+		String initialDir = System.getProperty("user.dir");
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setDialogTitle("Save document");
+		fileChooser.setCurrentDirectory(new File(initialDir));
+		fileChooser.setName("program."+  RTFX_FILE_EXTENSION);
+		fileChooser.showSaveDialog(this);
+		File selectedFile = fileChooser.getSelectedFile();
+		//if (fd.getFile() != null) {
+	//		selectedFile = new File(fd.getDirectory() + fd.getFile());
+		//}
+
+		save(selectedFile);
+
+	}
+
+	private void save(File selectedFile){
+		if (selectedFile != null) {
+			try (PrintWriter out = new PrintWriter(selectedFile)) {
+				out.println(codeArea.getText());
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+			prefs.put("last_macroprogram", selectedFile.getPath());
+			currentFile = selectedFile;
 		}
-		currentFile = selectedFile;
+	}
+
+	private void load(File selectedFile){
 		if (selectedFile != null) {
 			codeArea.clear();
 
@@ -196,43 +245,9 @@ public class IJVMEditor extends RememberPositionJFrame
 				e.printStackTrace();
 			}
 
-		}
-	}
-	private void save(){
-		if(currentFile==null)
-			saveDocument();
-		else
-			save(currentFile);
-	}
+			currentFile = selectedFile;
+			prefs.put("last_macroprogram", selectedFile.getPath());
 
-	private void saveDocument() {
-		FileDialog fd = new FileDialog(this, "Save Macroprogram", FileDialog.SAVE);
-		fd.setFile("*.jas");
-		fd.setVisible(true);
-		/*
-		String initialDir = System.getProperty("user.dir");
-		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setDialogTitle("Save document");
-		fileChooser.setCurrentDirectory(new File(initialDir));
-		fileChooser.setName("program."+  RTFX_FILE_EXTENSION);
-		fileChooser.showSaveDialog(this);
-		*/
-		File selectedFile = null;
-		if (fd.getFile() != null) {
-			selectedFile = new File(fd.getDirectory() + fd.getFile());
-		}
-		currentFile = selectedFile;
-		save(selectedFile);
-
-	}
-
-	private void save(File selectedFile){
-		if (selectedFile != null) {
-			try (PrintWriter out = new PrintWriter(selectedFile)) {
-				out.println(codeArea.getText());
-			}catch (Exception e){
-				e.printStackTrace();
-			}
 		}
 	}
 

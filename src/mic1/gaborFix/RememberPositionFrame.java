@@ -12,7 +12,7 @@ public class RememberPositionFrame extends Frame
 	private static final String OLD_WIDTH = "old_width";
 	private static final String OLD_HEIGHT = "old_height";
 
-	private final Preferences prefs = Preferences.userRoot().node(this.getClass().getName());
+	protected final Preferences prefs = Preferences.userRoot().node(this.getClass().getName());
 
 	public RememberPositionFrame(GraphicsConfiguration gc)
 	{

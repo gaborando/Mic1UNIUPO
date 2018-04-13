@@ -13,7 +13,7 @@ public class RememberPositionJFrame extends JFrame
 	private static final String OLD_WIDTH = "old_width";
 	private static final String OLD_HEIGHT = "old_height";
 
-	private final Preferences prefs = Preferences.userRoot().node(this.getClass().getName());
+	protected final Preferences prefs = Preferences.userRoot().node(this.getClass().getName());
 
 	public RememberPositionJFrame(GraphicsConfiguration gc)
 	{
@@ -97,20 +97,18 @@ public class RememberPositionJFrame extends JFrame
 
 
 	protected Point getLastLocation(){
-		Point currentLocation =  getLocation();
 		Point point = new Point(
-				prefs.getInt(OLD_LOC_X, currentLocation.x),
-				prefs.getInt(OLD_LOC_Y, currentLocation.y)
+				prefs.getInt(OLD_LOC_X, 500),
+				prefs.getInt(OLD_LOC_Y, 600)
 		);
 		//System.out.println("last_location: "+point);
 		return point;
 	}
 
 	protected Dimension getLastSize(){
-		Dimension currentSize =  getSize();
 		Dimension size = new Dimension(
-				prefs.getInt(OLD_WIDTH, currentSize.width),
-				prefs.getInt(OLD_HEIGHT, currentSize.height)
+				prefs.getInt(OLD_WIDTH, 500),
+				prefs.getInt(OLD_HEIGHT, 600)
 		);
 		//System.out.println("last_size_access: "+size);
 		return size;

@@ -170,7 +170,7 @@ import java.io.PrintStream;
 	      }
 	      msg.setText("Compiling " + infile + "...");
 	      err.println("Compiling " + infile + "...");
-	      ia = new IJVMAssembler(in, out, outfile,err, "ijvm.config");
+	      ia = new IJVMAssembler(in, out, outfile,err, "ijvm.conf");
 	      try {
 			in.close();
 		    out.close();

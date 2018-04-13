@@ -75,7 +75,7 @@ public class StackFrame extends RememberPositionJFrame implements TableModelList
 
 		table = new JTable(model);
 		table.setFont(Font.decode("Courier New"));
-		table.setPreferredScrollableViewportSize(new Dimension(300, 550));
+		table.setPreferredScrollableViewportSize(getLastSize());
 
 		// Create the scroll pane and add the table to it.
 		JScrollPane scrollPane = new JScrollPane(table);
@@ -117,6 +117,7 @@ public class StackFrame extends RememberPositionJFrame implements TableModelList
 		});
 		pack();
 		setLocation(getLastLocation());
+		setSize(getLastSize());
 		setVisible(true);
 		table.removeRowSelectionInterval(0, 0);
 	}
@@ -141,16 +142,22 @@ public class StackFrame extends RememberPositionJFrame implements TableModelList
 
 		Local_Pointers = Pointers;
 
+		int sp, lv;
+		sp = lv = 0;
 		for (int i = 0; i < MEM_SHOWED; i++) {
 			if (Pointers[0][i + begin] != 0)
 				N = "#" + Integer.toString(Pointers[0][i + begin]);
 			else
 				N = "";
 			String s = "";
-			if(Pointers[1][i + begin] == 0)
-				s+= "SP ";
-			if(Pointers[2][i + begin] == 0)
-				s+= "LV ";
+			if(Pointers[1][i + begin] == 0) {
+				s += "SP ";
+				sp = i;
+			}
+			if(Pointers[2][i + begin] == 0) {
+				s += "LV ";
+				lv = i;
+			}
 			if(Pointers[3][i + begin] == 0)
 				s+= "CPP ";
 			if(s.length()>1)
@@ -163,6 +170,8 @@ public class StackFrame extends RememberPositionJFrame implements TableModelList
 		if (Pointers[4][0] == 1) {
 			model.setPointer(P);
 		}
+
+		table.setRowSelectionInterval(sp, lv);
 	}
 
 	public void actionPerformed(ActionEvent e) {

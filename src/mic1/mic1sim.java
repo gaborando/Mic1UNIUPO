@@ -257,7 +257,6 @@ public class mic1sim extends RememberPositionFrame implements Mic1Constants {
     window.add(new MenuItem("Method Area"));
     window.add(new MenuItem("Debug"));
     window.add(new MenuItem("IJVM Editor"));
-    window.add(new MenuItem("Apri Tutto"));
 
     menubar.add(window);		// FINE
 
@@ -748,6 +747,7 @@ public class mic1sim extends RememberPositionFrame implements Mic1Constants {
     fd.setVisible(true);
     // fd.paintAll(fd.getGraphics());
     if (fd.getFile() != null) {
+      prefs.put("last_microprogram", fd.getDirectory() + fd.getFile());
       loadMicroprogram(fd.getDirectory() + fd.getFile());
     } 
   }
@@ -887,31 +887,6 @@ public class mic1sim extends RememberPositionFrame implements Mic1Constants {
           }
         }
 
-        if (((String)event.arg).equals("Apri Tutto")) {
-          if(!stack){
-            Stack_Frame = new StackFrame(main_memory, Pointers);
-            Stack_Frame.updatePointer(Pointers);
-            stack = true;
-          }
-          if(!memory){
-            mM_frame = new MainMemoryFrame(main_memory,mnemonic,constant,labels,Breakpoint_Vector);
-            mM_frame.update(address);
-            memory = true;
-          }
-          if(!debug){
-            debug_frame = new DebugFrame();
-            debug = true;
-          }
-          if (!control_memory){
-            cs_frame = new ControlStoreFrame(control_store);
-            control_memory = true;
-          }
-          if(!editor){
-            code_editor = new IJVMEditor(this::loadProgram);
-            editor = true;
-          }
-
-        }
         if (((String)event.arg).equals("Exit")) {
 	    this.dispatchEvent(new WindowEvent(mic1sim.this, WindowEvent.WINDOW_CLOSED));
 	    System.exit(0);
@@ -955,10 +930,10 @@ public class mic1sim extends RememberPositionFrame implements Mic1Constants {
     c.gridx = 0; c.gridy = 0; c.gridwidth = 2; c.gridheight = 1;
     c.gridwidth=2; constrain(new Label("Registers"),c);
     c.gridwidth=1;
-    c.gridy=1; constrain(new Label("mic1.MAR"),c);
-    c.gridy=2; constrain(new Label("mic1.MDR"),c);
-    c.gridy=3; constrain(new Label("mic1.PC"),c);
-    c.gridy=4; constrain(new Label("mic1.MBR"),c);
+    c.gridy=1; constrain(new Label("MAR"),c);
+    c.gridy=2; constrain(new Label("MDR"),c);
+    c.gridy=3; constrain(new Label("PC"),c);
+    c.gridy=4; constrain(new Label("MBR"),c);
     c.gridy=5; constrain(new Label("SP"),c);
     c.gridy=6; constrain(new Label("LV"),c);
     c.gridy=7; constrain(new Label("CPP"),c);
@@ -982,8 +957,8 @@ public class mic1sim extends RememberPositionFrame implements Mic1Constants {
     c.gridwidth=1;
     c.gridy=1; constrain(new Label("Microinstruction"),c);
     c.gridy=2; constrain(new Label("NextMicroinstruction"),c);
-    c.gridy=3; constrain(new Label("mic1.MPC"),c);
-    c.gridy=4; constrain(new Label("mic1.ALU"),c);
+    c.gridy=3; constrain(new Label("MPC"),c);
+    c.gridy=4; constrain(new Label("ALU"),c);
     c.gridwidth=2;
     c.gridy=5; constrain(new Label("Standard out"),c);
 
@@ -1048,10 +1023,6 @@ public class mic1sim extends RememberPositionFrame implements Mic1Constants {
       mM_frame.update(address);
       memory = true;
     }
-    if(!debug){
-      debug_frame = new DebugFrame();
-      debug = true;
-    }
     if (!control_memory){
       cs_frame = new ControlStoreFrame(control_store);
       control_memory = true;
@@ -1060,6 +1031,11 @@ public class mic1sim extends RememberPositionFrame implements Mic1Constants {
       code_editor = new IJVMEditor(this::loadProgram);
       editor = true;
     }
+
+    String lastMicroprogram = prefs.get("last_microprogram", null);
+    if(lastMicroprogram!=null)
+      loadMicroprogram(lastMicroprogram);
+
   }
 
   private void constrain(Component component, GridBagConstraints constraints) {
