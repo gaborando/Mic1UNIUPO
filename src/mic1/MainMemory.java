@@ -1,6 +1,6 @@
 package mic1;/*
 *
-*  mic1.MainMemory.java
+*  MainMemory.java
 *
 *  mic1 microarchitecture simulator 
 *  Copyright (C) 1999, Prentice-Hall, Inc. 
@@ -41,7 +41,7 @@ package mic1;/*
 *	Name             		Date       	Comment
 *	---------------- 		---------- 	----------------------------------------
 *	Dan Stone        			 	Created
-*	Claudio Bertoncello	12.1999 	in method poke set mic1.mic1sim.update and mic1.mic1sim.address
+*	Claudio Bertoncello	12.1999 	in method poke set mic1sim.update and mic1sim.address
 *	Simone Alciati		5.2001		updated
 *
 */

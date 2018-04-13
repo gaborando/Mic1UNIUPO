@@ -306,18 +306,18 @@ if ( LV )
 if ( SP )
   s = s + "SP=" ;
 if ( PC )
-  s = s + "mic1.PC=" ;
+  s = s + "PC=" ;
 if ( MDR )
-  s = s + "mic1.MDR=" ;
+  s = s + "MDR=" ;
 if ( MAR )
-  s = s + "mic1.MAR=" ;
+  s = s + "MAR=" ;
 
 // decode the B-bus bits
 switch ( B )
 {
-case B_MDR: b = "mic1.MDR" ; break ;
-case B_PC: b = "mic1.PC" ; break ;
-case B_MBR: b = "mic1.MBR" ; break ;
+case B_MDR: b = "MDR" ; break ;
+case B_PC: b = "PC" ; break ;
+case B_MBR: b = "MBR" ; break ;
 case B_MBRU: b = "MBRU" ; break ;
 case B_SP: b = "SP" ; break ;
 case B_LV: b = "LV" ; break ;
@@ -547,9 +547,9 @@ else if ( JAMZ )
 else if ( JMPC )
   {
   if ( NEXT_ADDRESS == 0 )
-     s = s + ";goto (mic1.MBR)" ;
+     s = s + ";goto (MBR)" ;
   else
-     s = s + ";goto (mic1.MBR OR 0x" + Integer.toHexString( NEXT_ADDRESS ).toUpperCase() + ")" ;
+     s = s + ";goto (MBR OR 0x" + Integer.toHexString( NEXT_ADDRESS ).toUpperCase() + ")" ;
   }
 else
   s = s + ";goto 0x" + Integer.toHexString( NEXT_ADDRESS ).toUpperCase() ;

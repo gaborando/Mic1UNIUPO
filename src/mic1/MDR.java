@@ -28,7 +28,7 @@ package mic1;/*
 import java.awt.TextField;
 
 /**
-* mic1.Register that contains word values for writing or reading from main
+* Register that contains word values for writing or reading from main
 * memory
 *
 * @author 
@@ -67,14 +67,14 @@ public class MDR extends TextField {
     if (store_cl.getValue()[0]) {
       value = in.getValue();
       if (mic1sim.debug) 
-	DebugFrame.text.append("mic1.MDR: Store 0x" + Integer.toHexString(value).toUpperCase() + "\n");
+	DebugFrame.text.append("MDR: Store 0x" + Integer.toHexString(value).toUpperCase() + "\n");
       if (!mic1sim.run)
 	refresh();
     }
     if (read_cl.getValue()[0]) {
       value = data_bus.getValue();
       if (mic1sim.debug) 
-	DebugFrame.text.append("mic1.MDR: Read 0x" + Integer.toHexString(value).toUpperCase() + "\n");
+	DebugFrame.text.append("MDR: Read 0x" + Integer.toHexString(value).toUpperCase() + "\n");
       if (!mic1sim.run)
 	refresh();
     }
@@ -84,7 +84,7 @@ public class MDR extends TextField {
     if (put_cl.getValue()[0]) {
       out.setValue(value);
       if (mic1sim.debug) 
-	DebugFrame.text.append("mic1.MDR: Put 0x" + Integer.toHexString(value).toUpperCase() + "\n");
+	DebugFrame.text.append("MDR: Put 0x" + Integer.toHexString(value).toUpperCase() + "\n");
       if (!mic1sim.run)
 	refresh();
     }
@@ -94,7 +94,7 @@ public class MDR extends TextField {
     if (mem_cl.getValue()[MIR.WRITE]) {
       data_bus.setValue(value);
       if (mic1sim.debug) 
-	DebugFrame.text.append("mic1.MDR: Write 0x" + Integer.toHexString(value).toUpperCase() + "\n");
+	DebugFrame.text.append("MDR: Write 0x" + Integer.toHexString(value).toUpperCase() + "\n");
       if (!mic1sim.run)
 	refresh();
     }

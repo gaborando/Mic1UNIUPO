@@ -13,7 +13,7 @@ public static void main ( String args[] )
 String iname = "t.mic1" ;
 String oname = "t.mal" ;
 
-System.out.println( "mic1.mic1dasm V0.0" ) ;
+System.out.println( "mic1dasm V0.0" ) ;
 
 // get the input file name from the command line
 if ( args.length > 0 )

@@ -248,7 +248,7 @@ public class IJVMMethod {
 				// parse parameters
 				if (st.hasMoreTokens()) {
 					if(inst.getParamNumber() == 0) {
-						error(lineno, "mic1.Instruction takes no parameters");
+						error(lineno, "Instruction takes no parameters");
 						status = false;
 					}
 					
@@ -328,7 +328,7 @@ public class IJVMMethod {
 					}
 					
 					if(st.hasMoreTokens()) {
-						error(lineno, "mic1.Instruction takes " + instruction.getParamNumber() + " parameters");
+						error(lineno, "Instruction takes " + instruction.getParamNumber() + " parameters");
 						status = false;
 					}
 					

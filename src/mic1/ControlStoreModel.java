@@ -1,11 +1,11 @@
 package mic1; /**
- * mic1.ControlStoreModel.java
+ * ControlStoreModel.java
  *
- *data model for mic1.ControlStoreFrame
+ *data model for ControlStoreFrame
  *
  * @author 
  *   Claudio Bertoncello (<a href="mailto:cle@edu-al.unipmn.it"><i>cle@edu-al.unipmn.it</i></a>),
- *   U.P.mic1.O.
+ *   U.P.O.
  *   Alessandria Italy
  */
 
@@ -16,7 +16,7 @@ import javax.swing.table.AbstractTableModel;
 class ControlStoreModel extends AbstractTableModel implements Mic1Constants {
 
 	static final public String address = "Address";
-	static final public String word = "mic1.Instruction";
+	static final public String word = "Instruction";
 	static final public String hexWord = "Hex instruction ";
 
 	protected Vector<Entry> data = null;

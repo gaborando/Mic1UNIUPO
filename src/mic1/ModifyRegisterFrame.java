@@ -1,12 +1,12 @@
 package mic1;
 /****
-*mic1.ModifyRegisterFrame.java
+*ModifyRegisterFrame.java
 *
 *Window used to modify the value of a register.
 *
 * @author 
 *   Simone Alciati (e-mail: alciati@edu-al.unipmn.it),
-*   U.P.mic1.O.
+*   U.P.O.
 *   Alessandria Italy
 ****/
 
@@ -39,15 +39,15 @@ public class ModifyRegisterFrame extends RememberPositionJFrame implements Actio
 
   public ModifyRegisterFrame(mic1sim s){
 
-	Dialog ModifyDialog = new Dialog(this, "Modify mic1.Register");
+	Dialog ModifyDialog = new Dialog(this, "Modify Register");
 	ModifyDialog.setLayout(new GridLayout(3,2,10,20));
 
 	os = new Choice();
 
-	os.addItem("mic1.MAR");
-	os.addItem("mic1.MDR");
-	os.addItem("mic1.PC");
-	os.addItem("mic1.MBR");
+	os.addItem("MAR");
+	os.addItem("MDR");
+	os.addItem("PC");
+	os.addItem("MBR");
 	os.addItem("SP");
 	os.addItem("LV");
 	os.addItem("CPP");
@@ -100,10 +100,10 @@ public class ModifyRegisterFrame extends RememberPositionJFrame implements Actio
    public void Modify(int SelectedRegister, String ValueOfRegister){
 	try{
 	  if (false) throw new RegisterValueException();
-	/*"mic1.MAR" correspond to index 0
-	"mic1.MDR" correspond to index 1
-	"mic1.PC" correspond to index 2
-	"mic1.MBR" correspond to index 3
+	/*"MAR" correspond to index 0
+	"MDR" correspond to index 1
+	"PC" correspond to index 2
+	"MBR" correspond to index 3
 	"SP" correspond to index 4
 	"LV" correspond to index 5
 	"CPP" correspond to index 6

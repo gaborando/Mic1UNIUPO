@@ -62,7 +62,7 @@ public class MAR extends TextField{
     if (store_cl.getValue()[0]) {
       value = in.getValue();
       if (mic1sim.debug) 
-	DebugFrame.text.append("mic1.MAR: Store 0x" + Integer.toHexString(value).toUpperCase() + "\n");
+	DebugFrame.text.append("MAR: Store 0x" + Integer.toHexString(value).toUpperCase() + "\n");
       if (!mic1sim.run)
 	refresh();
     }
@@ -72,7 +72,7 @@ public class MAR extends TextField{
     if (mem_cl.getValue()[MIR.READ]){
       address_bus.setValue(value);
       if (mic1sim.debug) 
-	DebugFrame.text.append("mic1.MAR: Read from word 0x" + Integer.toHexString(value).toUpperCase() + "\n");
+	DebugFrame.text.append("MAR: Read from word 0x" + Integer.toHexString(value).toUpperCase() + "\n");
       if (!mic1sim.run)
 	refresh();
     }
@@ -80,7 +80,7 @@ public class MAR extends TextField{
     if (mem_cl.getValue()[MIR.WRITE]) {
       address_bus.setValue(value);
       if (mic1sim.debug) 
-	DebugFrame.text.append("mic1.MAR: Write to word 0x" + Integer.toHexString(value).toUpperCase() + "\n");
+	DebugFrame.text.append("MAR: Write to word 0x" + Integer.toHexString(value).toUpperCase() + "\n");
       if (!mic1sim.run)
 	refresh();
     }

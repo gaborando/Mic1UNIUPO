@@ -28,7 +28,7 @@ package mic1;/*
 import java.awt.TextField;
 
 /**
-* mic1.Register that stores the current microinstruction and enables the
+* Register that stores the current microinstruction and enables the
 * appropriate control lines.
 *
 * @author 

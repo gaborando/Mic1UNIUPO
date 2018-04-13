@@ -190,7 +190,7 @@ a method:
 <ul>
 <li><u> Push OBJREF</u>.  This is a reference to the object that is invoking
 the method.  In IJVM, OBJREF is used primarily as a place holder  
-(it is overwritten with the address of the location the old mic1.PC is stored), and the value pushed
+(it is overwritten with the address of the location the old PC is stored), and the value pushed
 by the invoking method is ignored.  Thus, in IJVM, any value may be 
 pushed for OBJREF, but a value <i>must</i> be pushed.
 <li><u> Push any parameters</u>.  Parameters are pushed in the order that 
@@ -209,7 +209,7 @@ For a more detailed explanation with a complete example, see the
 <H3><a name="io">7. Input and output</a></H3>
 <p>
 Input and output are handled by the Main Memory module in the mic1 simulator.
-Main memory treats the highest memory addresses as an I/mic1.O device.  If a word
+Main memory treats the highest memory addresses as an I/O device.  If a word
 is written to this area, main memory writes the word's character value to 
 the standard out text area of the simulator.  If a word is read from this
 area of memory, main memory will return the next available value from 

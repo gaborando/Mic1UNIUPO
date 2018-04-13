@@ -1,5 +1,5 @@
 package mic1;/*
- *  mic1.ALU.java
+ *  ALU.java
  *
  *  mic1 microarchitecture simulator 
  *  Copyright (C) 1999, Prentice-Hall, Inc. 
@@ -58,7 +58,7 @@ public class ALU extends TextField {
 	}
 
 	public void poke() {
-		// System.out.print("mic1.ALU poked: ");
+		// System.out.print("ALU poked: ");
 
 		int a = 0;
 		int b = 0;
@@ -84,7 +84,7 @@ public class ALU extends TextField {
 		if (value[MIR.INC])
 			result++;
 		if (mic1sim.debug)
-			DebugFrame.text.append("mic1.ALU: " + toString() + "\n");
+			DebugFrame.text.append("ALU: " + toString() + "\n");
 		if (!mic1sim.run)
 			setText(toString());
 		out.setValue(result);

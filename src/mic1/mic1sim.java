@@ -169,24 +169,24 @@ public class mic1sim extends RememberPositionFrame implements Mic1Constants {
   public IntControlLine
     control_store_cl = null,
     decoder_cl = null,
-    o_addr_cl = null,  // Carries next microinstruction address to mic1.O
-    o_mbr_cl = null,   // Carries mic1.MBR value to mic1.O
-    mpc_cl = null;     // Carries mic1.O value to mic1.MPC
+    o_addr_cl = null,  // Carries next microinstruction address to O
+    o_mbr_cl = null,   // Carries MBR value to O
+    mpc_cl = null;     // Carries O value to MPC
   private ControlLine 
     memory_cl = null,
     alu_cl = null,
     shifter_cl = null,
-    o_jmpc_cl = null,    // Carries JMPC from mic1.MIR to mic1.O
-    jam_cl = null,       // Carries JAMN/JAMZ from mic1.MIR to High bit
-    high_bit_cl = null,  // Carries bit from High bit to mic1.MPC
-    n_cl = null,         // Negative flag from mic1.ALU to High bit
-    z_cl = null;         // Zero flag from mic1.ALU to High bit
+    o_jmpc_cl = null,    // Carries JMPC from MIR to O
+    jam_cl = null,       // Carries JAMN/JAMZ from MIR to High bit
+    high_bit_cl = null,  // Carries bit from High bit to MPC
+    n_cl = null,         // Negative flag from ALU to High bit
+    z_cl = null;         // Zero flag from ALU to High bit
 
-  // mic1.Register control lines
+  // Register control lines
   //   Each register has 2 control lines, one to indicate whether to store the value
   //   on the IN bus, the other to indicate whether to put its value onto the OUT
   //   bus.  Two control lines are used instead of one because the control signals
-  //   come from two different sources--STORE from the mic1.MIR, and PUT from the decoder--
+  //   come from two different sources--STORE from the MIR, and PUT from the decoder--
   //   and the two operations occur at different times in the clock cycle
   private ControlLine
     mar_store_cl = null,
@@ -197,7 +197,7 @@ public class mic1sim extends RememberPositionFrame implements Mic1Constants {
     pc_store_cl = null,
     pc_put_cl = null,
     mbr_store_cl = null,
-    mbr_put_cl = null,  // mic1.MBR stores only on a memory fetch, so it does not have a
+    mbr_put_cl = null,  // MBR stores only on a memory fetch, so it does not have a
     mbru_put_cl = null, // store control line.  It has 2 put control lines, signed and unsigned
     sp_store_cl = null,
     sp_put_cl = null,
@@ -271,8 +271,8 @@ public class mic1sim extends RememberPositionFrame implements Mic1Constants {
     compiler.add(new MenuItem("Compile IJVM code"));
     menubar.add(compiler);	
     
-    about = new Menu("mic1.About");
-    about.add(new MenuItem("mic1.About"));
+    about = new Menu("About");
+    about.add(new MenuItem("About"));
     menubar.add(about);	
     
     
@@ -528,7 +528,7 @@ public class mic1sim extends RememberPositionFrame implements Mic1Constants {
       if (Breakpoint) Breakpoint_Vector.removeAllElements(); 
       if (stack){
 //      	  	Stack_Frame.dispose();
-//      	  	Stack_Frame = new mic1.StackFrame(main_memory, Pointers);
+//      	  	Stack_Frame = new StackFrame(main_memory, Pointers);
 		Stack_Frame.updatePointer(Pointers);
 		}      
     }
@@ -544,7 +544,7 @@ public class mic1sim extends RememberPositionFrame implements Mic1Constants {
   }
 
   public void cycle() {
- 
+
     int sp_value_old, lv_value_old,cpp_value_old;
     
     
@@ -647,12 +647,14 @@ public class mic1sim extends RememberPositionFrame implements Mic1Constants {
 
        {
           stop();
-          ErrorDialog err = new ErrorDialog("Program interrupted" , "Reached breakpoint: mic1.PC = " + Integer.toHexString(pc.getValue()));
+          ErrorDialog err = new ErrorDialog("Program interrupted" , "Reached breakpoint: PC = " + Integer.toHexString(pc.getValue()));
 	  old_pc.setValue(pc.getValue());
        }
     }
 
-	}	
+	}
+    if (control_memory) cs_frame.selectMpc(mpc.getValue());
+    if (memory) mM_frame.selectPc(pc.getValue());
   }
 
   public static void halt() {
@@ -867,7 +869,7 @@ public class mic1sim extends RememberPositionFrame implements Mic1Constants {
 	    	stack = true; 
 	     }
 	  }
-	  if (((String)event.arg).equals("mic1.About")) {
+	  if (((String)event.arg).equals("About")) {
 		  if(ab == null || !ab.isOn()){
 		    About ab = new About();
 		  }	 
@@ -1044,7 +1046,7 @@ public class mic1sim extends RememberPositionFrame implements Mic1Constants {
   }
 
   private static void bad_option() {
-    System.out.println("Usage: java mic1.mic1sim <file.mic1> <file.ijvm> <-n>");
+    System.out.println("Usage: java mic1sim <file.mic1> <file.ijvm> <-n>");
     System.exit(0);
   }  
 

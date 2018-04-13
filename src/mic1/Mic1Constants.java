@@ -43,7 +43,7 @@ package mic1;/*
 *	Name             		Date       	Comment
 *	---------------- 		---------- 	----------------------------------------
 *	Dan Stone        			 	Created
-*	Claudio Bertoncello	1999.12 	added magic number for .mne files and the size of memory showed by mic1.MainMemoryFrame
+*	Claudio Bertoncello	1999.12 	added magic number for .mne files and the size of memory showed by MainMemoryFrame
 *	Simone Alciati		2001.5		modified the original value of any variables (LV and SP)
 */
 

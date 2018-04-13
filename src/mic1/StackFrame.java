@@ -1,11 +1,11 @@
 package mic1; /**
- * mic1.StackFrame.java
+ * StackFrame.java
  *
  * Window that displays the Stack (Memory).
  *
  * @author 
  *   Simone Alciati (e-mail: alciati@edu-al.unipmn.it),
- *   U.P.mic1.O.
+ *   U.P.O.
  *   Alessandria Italy
  */
 
@@ -149,6 +149,7 @@ public class StackFrame extends RememberPositionJFrame implements TableModelList
 				N = "#" + Integer.toString(Pointers[0][i + begin]);
 			else
 				N = "";
+			/**
 			String s = "";
 			if(Pointers[1][i + begin] == 0) {
 				s += "SP ";
@@ -163,6 +164,57 @@ public class StackFrame extends RememberPositionJFrame implements TableModelList
 			if(s.length()>1)
 				s = "<-- "+s;
 			P.add(s);
+			 */
+			if(Pointers[1][i + begin] == 0) {
+				sp = i;
+			}
+			if(Pointers[2][i + begin] == 0) {
+				lv = i;
+			}
+			{
+				if ((Pointers[1][i + begin] == 0)
+						&& (Pointers[2][i + begin] == 0)
+						&& (Pointers[3][i + begin] == 0))
+					P.add("<-- CPP, SP " + N + ", LV " + N);
+				else {
+					if ((Pointers[1][i + begin] == 0)
+							&& (Pointers[2][i + begin] == 0)
+							&& (Pointers[3][i + begin] != 0))
+						P.add("<-- SP " + N + ", LV " + N);
+					else {
+						if ((Pointers[3][i + begin] == 0)
+								&& (Pointers[2][i + begin] == 0)
+								&& (Pointers[1][i + begin] != 0))
+							P.add("<-- CPP, LV " + N);
+						else {
+							if ((Pointers[1][i + begin] == 0)
+									&& (Pointers[3][i + begin] == 0)
+									&& (Pointers[2][i + begin] != 0))
+								P.add("<-- CPP, SP " + N);
+							else {
+								if ((Pointers[1][i + begin] == 0)
+										&& (Pointers[3][i + begin] != 0)
+										&& (Pointers[2][i + begin] != 0))
+									P.add("<-- SP " + N);
+								else {
+									if ((Pointers[2][i + begin] == 0)
+											&& (Pointers[3][i + begin] != 0)
+											&& (Pointers[1][i + begin] != 0))
+										P.add("<-- LV " + N);
+									else {
+										if ((Pointers[3][i + begin] == 0)
+												&& (Pointers[1][i + begin] != 0)
+												&& (Pointers[2][i + begin] != 0))
+											P.add("<-- CPP");
+										else
+											P.add("       "+N);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 
 		}
 		// qui si passa dall'array rappresentante tutta l'area di Stack ad un

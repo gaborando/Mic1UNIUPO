@@ -15,12 +15,12 @@ Frequently asked questions
 <p>
 <b>Installing and running mic1</b>
 <li><a href="#req">What do I need to run mic1?</a>
-<li><a href="#setup">I've downloaded and installed mic1.  
+<li><a href="#setup">I've downloaded and installed
 What do I need to do now?</a>
 
 <p>
 <b>Writing IJVM programs</b>
-<li><a href="#inout">How do I use the I/mic1.O instructions, IN and OUT?</a>
+<li><a href="#inout">How do I use the I/O instructions, IN and OUT?</a>
 <li><a href="#method">How do I use methods in an IJVM program?</a>
 <LI><A href="#noecho">Why doesn't keyboard input read by the IN
 instruction show up in "Standard out"?</A>
@@ -31,11 +31,11 @@ instruction show up in "Standard out"?</A>
 <p>
 <b>General mic1 simulator questions</b>
 <li>
-<A HREF="#pcffffffff">Why does the mic1.PC start at 0xFFFFFFFF instead of 0x0?</A>
+<A HREF="#pcffffffff">Why does the PC start at 0xFFFFFFFF instead of 0x0?</A>
 <li>
 <A HREF="#nopfirst">Why is nop1 the first microinstruction, instead of 
 Main1?</A>
-<li>How does I/mic1.O work? <I>tbd</I>
+<li>How does I/O work? <I>tbd</I>
 <li>What's the deal with the Debug frame? <I>tbd</I>
 <li>
 <A HREF="#debugmar">Why does the debug frame show some addresses as 
@@ -58,9 +58,9 @@ Java Development Kit (JDK) 1.0 or later for Win95/98/NT or some flavor of
 Unix.  There is not currently a distribution available for Macintosh.
 <P>
 Some of the java programs may be used in a text-only environment
-(mic1.ijvmasm, mic1.mic1asm, mic1.mic1dasm, dump)
+(ijvmasm, mic1asm, mic1dasm, dump)
 but the simulator itself and certain other programs 
-(mic1.mic1sim, mic1.gijvmasm, mic1.gmic1asm)
+(mic1sim, gijvmasm, gmic1asm)
 require a graphical environment.  
 For Win95/98/NT users this should not a problem, but for Unix users, 
 this means that you will need X-Windows to run the simulator or
@@ -128,7 +128,7 @@ directories, .zip files, and .jar files.
 <hr>
 <a name="inout"></a>
 <b>
-How do I use the I/mic1.O instructions, IN and OUT?
+How do I use the I/O instructions, IN and OUT?
 </b><br>
 <ul>
 <li><b>IN</b>: When a key is pressed, the character entered is put into a
@@ -147,7 +147,7 @@ clear:	POP		// Remove 0 from top of stack
 .end-method
 </pre>
 This method will loop until a key has been pressed.  The keyboard buffer
-can be cleared by clicking the Reset button in the mic1.mic1sim window.  <tt>IN</tt>
+can be cleared by clicking the Reset button in the mic1sim window.  <tt>IN</tt>
 does not echo characters to the standard out text area.  See <tt>echo.jas</tt>
 for an example of how to echo key strokes to the standard out text area.
 <li><b>OUT</b>: <tt>OUT</tt> prints the value on the top of the stack to
@@ -311,7 +311,7 @@ doing an explicit OUT instruction for each character that you
 read and want to echo.
 <HR>
 
-<A name="pcffffffff"><B>Why does the mic1.PC start at 0xFFFFFFFF instead of
+<A name="pcffffffff"><B>Why does the PC start at 0xFFFFFFFF instead of
 0x0?</B></A>
 <P>
 It seemed reasonable that the <EM>control store</EM> should begin
@@ -319,16 +319,16 @@ execution at control store location 0x000.
 This happens to be the location for the <TT>NOP</TT>
 IJVM instruction, so we begin our interpretation loop there.  
 We then 
-proceed to "Main1" to increment the mic1.PC,
+proceed to "Main1" to increment the PC,
 and begin a fetch from this incremented address (the fetch happens
 at the end of the clock cycle and the fetched value is not available
-from mic1.MBR until the <EM>end</EM> of the next cycle).  Since
+from MBR until the <EM>end</EM> of the next cycle).  Since
 we want execution of the ISA-level program to begin at 0x00000000, we 
-have accomplished this by pre-setting the mic1.PC to 0xFFFFFFFF and allowing
+have accomplished this by pre-setting the PC to 0xFFFFFFFF and allowing
 the initial increment along with an initial NOP, this "wastes" one 
 micro-instruction every time we RESET the machine.
 <P>
-We <EM>could</EM> have used the same approach (with mic1.PC 0xFFFFFFFF)
+We <EM>could</EM> have used the same approach (with PC 0xFFFFFFFF)
 and started at "Main1"
 instead of "nop1", in the <A HREF="mic1ijvm.mal"><TT>mic1ijvm.mal</TT></A> 
 microprogram, 
@@ -343,10 +343,10 @@ many ISA-level designers).
 <P>
 Another approach would have been to designate some other location
 as the first micro-instruction and require that a "fetch" happen
-with mic1.PC 0x00000000 (and then another instruction to wait for the
-fetch into the mic1.MBR to complete) before entering the main loop.
+with PC 0x00000000 (and then another instruction to wait for the
+fetch into the MBR to complete) before entering the main loop.
 Since many microprograms have similar increment/fetch loops, we
-felt that it was reasonable to require that the mic1.PC be started at
+felt that it was reasonable to require that the PC be started at
 0xFFFFFFFF as part of the hardware design.
 <P>
 Feedback on this item is particularly welcomed 
@@ -355,7 +355,7 @@ Feedback on this item is particularly welcomed
 <A NAME="nopfirst"><B>Why is nop1 the first microinstruction, instead of 
 Main1?</B></A>
 <P>
-In order for "goto(mic1.MBR)" to work when mic1.MBR contains the opcode for
+In order for "goto(MBR)" to work when MBR contains the opcode for
 <TT>NOP</TT>, the control store location 0x000 must contain the 
 microinstruction "nop1".   This means that "Main1" must be at
 some other location not used by one of the other opcodes, and that
@@ -368,7 +368,7 @@ it seemed reasonable to pick control store location
 <P>
 While any address would do as a starting location, 
 this one seemed particularly appropriate, since
-many microprograms might employ "goto(mic1.MBR)" and many ISA-level
+many microprograms might employ "goto(MBR)" and many ISA-level
 languages might employ opcode 0x00 as a NOP instruction.
 <P>
 Feedback on this item is particularly welcomed 
@@ -395,9 +395,9 @@ device than one which ignores non-printable characters.
 <A NAME="debugmar"><B>Why does the debug frame show some addresses as 
 word-addresses and others as byte-addresses?</B></A>
 <P>
-The mic1.MAR stores a number that is a <EM>word</EM> address (not a word-aligned
-byte-address), and the mic1.PC stores a <EM>byte</EM> address.  This is specified
-in Chapter 4, of Tanenbaum.  When the mic1.MAR is expressed on the memory bus,
+The MAR stores a number that is a <EM>word</EM> address (not a word-aligned
+byte-address), and the PC stores a <EM>byte</EM> address.  This is specified
+in Chapter 4, of Tanenbaum.  When the MAR is expressed on the memory bus,
 it is at that point shifted by two bits.
 <HR>
 

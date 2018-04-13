@@ -1,6 +1,6 @@
 package mic1;/*
 *
-*  mic1.Shifter.java
+*  Shifter.java
 *
 *  mic1 microarchitecture simulator 
 *  Copyright (C) 1999, Prentice-Hall, Inc. 

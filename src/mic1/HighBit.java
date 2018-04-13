@@ -1,6 +1,6 @@
 package mic1;/*
 *
-*  mic1.HighBit.java
+*  HighBit.java
 *
 *  mic1 microarchitecture simulator 
 *  Copyright (C) 1999, Prentice-Hall, Inc. 

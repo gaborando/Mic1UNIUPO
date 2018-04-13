@@ -30,7 +30,7 @@ package mic1;/*
 
 /**
 * mic1.Bus that holds a Java Object.  Used to carry Mic1Instructions from
-* the control store to the mic1.MIR.
+* the control store to the MIR.
 *
 * @author 
 *   Dan Stone (<a href="mailto:dans@ontko.com"><i>dans@ontko.com</i></a>),

@@ -1,15 +1,15 @@
 package mic1;
 /**
-* mic1.MNELoader.java
+* MNELoader.java
 *
-* Loads an MNE file in a Vector for mic1.MainMemoryFrame.
+* Loads an MNE file in a Vector for MainMemoryFrame.
 *
 * @author (original version)
 *   Claudio Bertoncello (<a href="mailto:cle@edu-al.unipmn.it"><i>cle@edu-al.unipmn.it</i></a>),
 *
 * updated by
 *   Simone Alciati (e-mail: alciati@edu-al.unipmn.it),
-*   U.P.mic1.O.
+*   U.P.O.
 *   Alessandria Italy
 *                       
 */

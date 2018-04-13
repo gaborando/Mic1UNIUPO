@@ -1,6 +1,6 @@
 package mic1;/*
 *
-*  mic1.Mic1Scanner.java
+*  Mic1Scanner.java
 *
 *  mic1 microarchitecture simulator 
 *  Copyright (C) 1999, Prentice-Hall, Inc. 
@@ -62,10 +62,10 @@ if ( t ==  StreamTokenizer.TT_WORD )
   if ( st.sval.equals( "nop" ) ) return new Symbol(Mic1Symbol.NOP) ;
   if ( st.sval.equals( "N" ) ) return new Symbol(Mic1Symbol.N) ;
   if ( st.sval.equals( "Z" ) ) return new Symbol(Mic1Symbol.Z) ;
-  if ( st.sval.equals( "mic1.MBR" ) ) return new Symbol(Mic1Symbol.MBR) ;
-  if ( st.sval.equals( "mic1.MAR" ) ) return new Symbol(Mic1Symbol.MAR) ;
-  if ( st.sval.equals( "mic1.MDR" ) ) return new Symbol(Mic1Symbol.MDR) ;
-  if ( st.sval.equals( "mic1.PC" ) ) return new Symbol(Mic1Symbol.PC) ;
+  if ( st.sval.equals( "MBR" ) ) return new Symbol(Mic1Symbol.MBR) ;
+  if ( st.sval.equals( "MAR" ) ) return new Symbol(Mic1Symbol.MAR) ;
+  if ( st.sval.equals( "MDR" ) ) return new Symbol(Mic1Symbol.MDR) ;
+  if ( st.sval.equals( "PC" ) ) return new Symbol(Mic1Symbol.PC) ;
   if ( st.sval.equals( "SP" ) ) return new Symbol(Mic1Symbol.SP) ;
   if ( st.sval.equals( "LV" ) ) return new Symbol(Mic1Symbol.LV) ;
   if ( st.sval.equals( "CPP" ) ) return new Symbol(Mic1Symbol.CPP) ;

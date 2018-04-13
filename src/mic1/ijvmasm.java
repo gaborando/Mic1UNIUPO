@@ -29,7 +29,7 @@ package mic1;/*
 */ 
 
 /**
-* Command line front end for mic1.IJVMAssembler.
+* Command line front end for IJVMAssembler.
 *
 * @author 
 *   Dan Stone (<a href="mailto:dans@ontko.com"><i>dans@ontko.com</i></a>),
@@ -41,7 +41,7 @@ public final class ijvmasm {
   public static void main(String args[]) {
     IJVMAssembler ia = null;
     if (args.length == 0 || args[0].equals("help"))
-      System.out.println("usage: java mic1.ijvmasm <jas source file> [ijvm file]");
+      System.out.println("usage: java ijvmasm <jas source file> [ijvm file]");
     else {
       String outfile = null;
       String infile = args[0];

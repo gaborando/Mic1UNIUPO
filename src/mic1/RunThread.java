@@ -1,6 +1,6 @@
 package mic1;/*
 *
-*  mic1.RunThread.java
+*  RunThread.java
 *
 *  mic1 microarchitecture simulator 
 *  Copyright (C) 1999, Prentice-Hall, Inc. 

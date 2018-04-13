@@ -1,6 +1,6 @@
 package mic1;/*
  *
- *  mic1.mic1asm.java
+ *  mic1asm.java
  *
  *  mic1 microarchitecture simulator 
  *  Copyright (C) 1999, Prentice-Hall, Inc. 
@@ -27,7 +27,7 @@ package mic1;/*
  *    http://www.gnu.org/copyleft/gpl.html
  * 
  */
-// public class mic1.mic1asm
+// public class mic1asm
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
