@@ -58,7 +58,7 @@ public final class ijvmasm {
       }
       else
 	outfile = infile.substring(0, infile.length() - 4) + ".ijvm";
-      ia = new IJVMAssembler(infile, outfile);
+      ia = new IJVMAssembler(infile, outfile, "ijvm.config");
     }
   }
 }

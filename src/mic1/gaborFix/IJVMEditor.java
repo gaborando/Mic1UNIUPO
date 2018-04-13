@@ -12,10 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import mic1.IJVMAssembler;
-import mic1.TextAreaOutputStream;
 
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.*;
 
@@ -125,7 +122,7 @@ public class IJVMEditor extends RememberPositionJFrame
 			return null;
 		}
 		err.println("Compiling " + infile + "...");
-		ia = new IJVMAssembler(in, out, outfile,err);
+		ia = new IJVMAssembler(in, out, outfile,err, "ijvm.config");
 		try {
 			in.close();
 			out.close();

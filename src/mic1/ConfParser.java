@@ -59,7 +59,9 @@ public class ConfParser {
 
 	public ConfParser(String filename) {
 		this.filename = filename;
+
 		try {
+			/**
                         String conffile = System.getenv("HOME") + "/." + filename;
                         File f = new File(conffile);
                         if (f.exists()) {
@@ -79,6 +81,7 @@ public class ConfParser {
                         }
                         System.out.println("Conf File: " + filename);
 //			in = new BufferedInputStream(new FileInputStream(filename));
+			*/
 			reader = new BufferedReader(new FileReader(filename));
 			parse();
 		} catch (FileNotFoundException ex) {

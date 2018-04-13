@@ -156,7 +156,7 @@ public class gijvmasm extends Frame {
         return;
       }
       msg.setText("Compiling " + infile);
-      ia = new IJVMAssembler(in, out, outfile, System.out);
+      ia = new IJVMAssembler(in, out, outfile, System.out, "ijvm.config");
       if (ia.getStatus())
         msg.setText(outfile + " has been created");
       else

@@ -72,7 +72,6 @@ public class IJVMAssembler implements Mic1Constants {
   private IJVMMethod main = null;
   private Hashtable<String, Integer> method_refs = null;
   private static int lineno;
-  private static String conf_file = "ijvm.conf";
   private boolean status;
   static final byte
     magic1 = (byte)0x1D,
@@ -88,7 +87,7 @@ public class IJVMAssembler implements Mic1Constants {
   int byte_count;
   int const_count;
   private PrintStream err;
-  public IJVMAssembler(InputStream in, OutputStream out, String outfile, PrintStream err) {
+  public IJVMAssembler(InputStream in, OutputStream out, String outfile, PrintStream err, String config) {
     this.in = in;
     this.out = out;
     this.err = err;
@@ -96,7 +95,7 @@ public class IJVMAssembler implements Mic1Constants {
     constants = new Vector<IJVMConstant>();
     methods = new Vector<IJVMMethod>();
     method_refs = new Hashtable<String, Integer>();
-    init();
+    init(config);
     if (parse()) {
       try {
 		int index=outfile.indexOf('.');
@@ -110,7 +109,7 @@ public class IJVMAssembler implements Mic1Constants {
     }
   }
 
-  public IJVMAssembler(String infile, String outfile) {
+  public IJVMAssembler(String infile, String outfile, String config) {
     try {
       lineno = 0;
       in = new BufferedInputStream(new FileInputStream(infile));
@@ -118,7 +117,7 @@ public class IJVMAssembler implements Mic1Constants {
       constants = new Vector<IJVMConstant>();
       methods = new Vector<IJVMMethod>();
       method_refs = new Hashtable<String, Integer>();
-      init();
+      init(config);
     }
     catch (Exception e) {
     	error("Error opening file " + infile);
@@ -147,7 +146,7 @@ public class IJVMAssembler implements Mic1Constants {
     * can be customized to suit the requirements of an altered instruction
     * set or simulator architecture.
     */
-  private void init() {
+  private void init(String conf_file) {
 		ops.clear();
 		ConfParser cp = new ConfParser(conf_file);
 		Vector<Instruction> ins = cp.getInstructionSet();
@@ -240,7 +239,7 @@ public class IJVMAssembler implements Mic1Constants {
 	}
 	else {
 	  Integer value = Integer.decode(st.nextToken());
-	  constants.addElement(new IJVMConstant(name, value.intValue()));
+	  constants.addElement(new IJVMConstant(name, value));
 	}
       }
       line = readLine();
@@ -286,7 +285,7 @@ public class IJVMAssembler implements Mic1Constants {
       IJVMMethod method = methods.elementAt(i);
       IJVMConstant constant = new IJVMConstant(method.getName(), byte_count);
       constants.add(constant);
-      method_refs.put(method.getName(), new Integer(constants.indexOf(constant)));
+      method_refs.put(method.getName(), constants.indexOf(constant));
       byte_count = byte_count + method.getByteCount() + 4;  // four bytes for param & local var count
     }
     for (int i = 0; i < methods.size(); i++) 
