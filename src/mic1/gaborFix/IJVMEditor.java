@@ -161,6 +161,12 @@ public class IJVMEditor extends RememberPositionJFrame
 	}
 
 	private void loadDocument() {
+		FileDialog fd = new FileDialog(this, "Load Macroprogram", FileDialog.LOAD);
+		fd.setFile("*.jas");
+		fd.setVisible(true);
+		// fd.paintAll(fd.getGraphics());
+
+		/**
 		String initialDir = System.getProperty("user.dir");
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle("Load document");
@@ -168,7 +174,11 @@ public class IJVMEditor extends RememberPositionJFrame
 		fileChooser.setFileFilter(
 				new FileNameExtensionFilter("JAS file",  RTFX_FILE_EXTENSION));
 		fileChooser.showOpenDialog(this);
-		File selectedFile = fileChooser.getSelectedFile();
+		 */
+		File selectedFile = null;
+		if (fd.getFile() != null) {
+			selectedFile = new File(fd.getDirectory() + fd.getFile());
+		}
 		currentFile = selectedFile;
 		if (selectedFile != null) {
 			codeArea.clear();
@@ -199,13 +209,21 @@ public class IJVMEditor extends RememberPositionJFrame
 	}
 
 	private void saveDocument() {
+		FileDialog fd = new FileDialog(this, "Save Macroprogram", FileDialog.SAVE);
+		fd.setFile("*.jas");
+		fd.setVisible(true);
+		/*
 		String initialDir = System.getProperty("user.dir");
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle("Save document");
 		fileChooser.setCurrentDirectory(new File(initialDir));
 		fileChooser.setName("program."+  RTFX_FILE_EXTENSION);
 		fileChooser.showSaveDialog(this);
-		File selectedFile = fileChooser.getSelectedFile();
+		*/
+		File selectedFile = null;
+		if (fd.getFile() != null) {
+			selectedFile = new File(fd.getDirectory() + fd.getFile());
+		}
 		currentFile = selectedFile;
 		save(selectedFile);
 
