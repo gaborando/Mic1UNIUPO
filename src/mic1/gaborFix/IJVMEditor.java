@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import mic1.IJVMAssembler;
 
 import javax.swing.*;
@@ -174,13 +175,11 @@ public class IJVMEditor extends RememberPositionJFrame
 		// fd.paintAll(fd.getGraphics());
 
 		String initialDir = System.getProperty("user.dir");
-		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setDialogTitle("Load document");
-		fileChooser.setCurrentDirectory(new File(initialDir));
-		fileChooser.setFileFilter(
-				new FileNameExtensionFilter("JAS file",  RTFX_FILE_EXTENSION));
-		fileChooser.showOpenDialog(this);
-		File selectedFile = fileChooser.getSelectedFile();
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Open document");
+		fileChooser.setInitialDirectory(currentFile!=null? currentFile.getParentFile():new File(initialDir));
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JAS FILE", "*."+RTFX_FILE_EXTENSION));
+		File selectedFile  = fileChooser.showOpenDialog(null);
 		//if (fd.getFile() != null) {
 		//	selectedFile = new File(fd.getDirectory() + fd.getFile());
 		//}
@@ -199,12 +198,12 @@ public class IJVMEditor extends RememberPositionJFrame
 		//fd.setFile("*.jas");
 		//fd.setVisible(true);
 		String initialDir = System.getProperty("user.dir");
-		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setDialogTitle("Save document");
-		fileChooser.setCurrentDirectory(new File(initialDir));
-		fileChooser.setName("program."+  RTFX_FILE_EXTENSION);
-		fileChooser.showSaveDialog(this);
-		File selectedFile = fileChooser.getSelectedFile();
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Save document");
+		fileChooser.setInitialDirectory(currentFile!=null? currentFile.getParentFile():new File(initialDir));
+		fileChooser.setInitialFileName("program."+ RTFX_FILE_EXTENSION);
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JAS FILE", "*."+RTFX_FILE_EXTENSION));
+		File selectedFile  = fileChooser.showSaveDialog(null);
 		//if (fd.getFile() != null) {
 	//		selectedFile = new File(fd.getDirectory() + fd.getFile());
 		//}
