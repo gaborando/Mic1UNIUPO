@@ -100,7 +100,8 @@ public class IJVMEditor extends RememberPositionJFrame
 
 	private void buildAndLoad()
 	{
-		builderProgramHandler.handle(compile());
+		Platform.runLater( () -> {
+		builderProgramHandler.handle(compile());});
 	}
 
 	private String compile() {
