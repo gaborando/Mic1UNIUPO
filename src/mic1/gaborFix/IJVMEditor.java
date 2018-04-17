@@ -15,12 +15,10 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import mic1.IJVMAssembler;
 
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class IJVMEditor extends RememberPositionJFrame
 {
@@ -69,12 +67,12 @@ public class IJVMEditor extends RememberPositionJFrame
 		Button saveBtn = createButton("savefile", this::save,
 				"Save document.\n\n" +
 						"Note: the demo will save the area's content to a \"" + RTFX_FILE_EXTENSION + "\" file. " +
-						"This file format is abitrary and may change across versions.","content-save.png");
+						"This file format is abitrary and may change across versions.", "content-save.png");
 
-		Button undoBtn = createButton("undo", codeArea::undo, "Undo","undo-variant.png");
-		Button redoBtn = createButton("redo", codeArea::redo, "Redo","redo-variant.png");
-		Button cutBtn = createButton("cut", codeArea::cut, "Cut","content-cut.png");
-		Button copyBtn = createButton("copy", codeArea::copy, "Copy","content-copy.png");
+		Button undoBtn = createButton("undo", codeArea::undo, "Undo", "undo-variant.png");
+		Button redoBtn = createButton("redo", codeArea::redo, "Redo", "redo-variant.png");
+		Button cutBtn = createButton("cut", codeArea::cut, "Cut", "content-cut.png");
+		Button copyBtn = createButton("copy", codeArea::copy, "Copy", "content-copy.png");
 		Button pasteBtn = createButton("paste", codeArea::paste, "Paste", "content-paste.png");
 
 		Button build = createButton("build", this::compile, "Build", "wrench.png");
@@ -95,7 +93,7 @@ public class IJVMEditor extends RememberPositionJFrame
 		vbox.getChildren().addAll(toolBar1, codeArea, errConsole);
 
 		scene = new Scene(vbox, 600, 400);
-		scene.getStylesheets().add(IJVMEditor.class.getResource("../../ijvm-keywords.css").toExternalForm());
+		scene.getStylesheets().add(IJVMEditor.class.getResource("ijvm-keywords.css").toExternalForm());
 
 		return (scene);
 	}
@@ -133,7 +131,7 @@ public class IJVMEditor extends RememberPositionJFrame
 			return null;
 		}
 		err.println("Compiling " + infile + "...");
-		ia = new IJVMAssembler(in, out, outfile,err, "ijvm.conf");
+		ia = new IJVMAssembler(in, out, outfile,err, Files.exists(Paths.get("ijvm.conf")) ? "ijvm.conf" : getClass().getResource("../ijvm.conf").getFile());
 		try {
 			in.close();
 			out.close();
@@ -161,7 +159,7 @@ public class IJVMEditor extends RememberPositionJFrame
 		if (toolTip != null) {
 			button.setTooltip(new Tooltip(toolTip));
 		}
-		ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream("../../"+image)));
+		ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream(image)));
 		imageView.setFitHeight(20);
 		imageView.setFitWidth(20);
 		button.setGraphic(imageView);

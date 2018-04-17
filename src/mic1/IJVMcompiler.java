@@ -47,9 +47,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+	import java.nio.file.Files;
+	import java.nio.file.Paths;
 
 
-	public class IJVMcompiler extends Frame {
+public class IJVMcompiler extends Frame {
 
 	  private Panel
 	    label_panel,
@@ -170,7 +172,7 @@ import java.io.PrintStream;
 	      }
 	      msg.setText("Compiling " + infile + "...");
 	      err.println("Compiling " + infile + "...");
-	      ia = new IJVMAssembler(in, out, outfile,err, "ijvm.conf");
+	      ia = new IJVMAssembler(in, out, outfile,err, Files.exists(Paths.get("ijvm.conf")) ? "ijvm.conf" : getClass().getResource("ijvm.conf").getFile());
 	      try {
 			in.close();
 		    out.close();

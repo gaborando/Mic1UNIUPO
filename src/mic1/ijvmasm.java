@@ -26,7 +26,10 @@ package mic1;/*
 * 
 *    http://www.gnu.org/copyleft/gpl.html
 * 
-*/ 
+*/
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
 * Command line front end for IJVMAssembler.
@@ -58,7 +61,7 @@ public final class ijvmasm {
       }
       else
 	outfile = infile.substring(0, infile.length() - 4) + ".ijvm";
-      ia = new IJVMAssembler(infile, outfile, "ijvm.conf");
+      ia = new IJVMAssembler(infile, outfile, Files.exists(Paths.get("ijvm.conf")) ? "ijvm.conf" : ijvmasm.class.getResource("ijvm.conf").getFile());
     }
   }
 }
