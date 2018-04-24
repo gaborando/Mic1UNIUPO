@@ -4,9 +4,9 @@ import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.*;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -99,13 +99,14 @@ public class IJVMEditor extends RememberPositionJFrame
 		return (scene);
 	}
 
-	private void buildAndLoad() {
-		try {
-
-			SwingUtilities.invokeLater(() -> {
-				builderProgramHandler.handle(compile());
-			});
-		} catch (Exception ignored) {
+	private void buildAndLoad()
+	{
+		try
+		{
+			SwingUtilities.invokeLater(() ->
+					builderProgramHandler.handle(compile())
+			);
+		}catch (Exception ignored){
 
 		}
 	}
