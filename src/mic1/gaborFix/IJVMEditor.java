@@ -195,7 +195,7 @@ public class IJVMEditor extends RememberPositionJFrame
 		fileChooser.setTitle("Open document");
 		fileChooser.setInitialDirectory(currentFile!=null? currentFile.getParentFile():new File(initialDir));
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JAS FILE", "*."+RTFX_FILE_EXTENSION));
-		File selectedFile  = fileChooser.showOpenDialog(fxPanel.getScene().getWindow());
+		File selectedFile  = fileChooser.showOpenDialog(null);
 		//if (fd.getFile() != null) {
 		//	selectedFile = new File(fd.getDirectory() + fd.getFile());
 		//}
@@ -219,7 +219,7 @@ public class IJVMEditor extends RememberPositionJFrame
 		fileChooser.setInitialDirectory(currentFile!=null? currentFile.getParentFile():new File(initialDir));
 		fileChooser.setInitialFileName("program."+ RTFX_FILE_EXTENSION);
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JAS FILE", "*."+RTFX_FILE_EXTENSION));
-		File selectedFile  = fileChooser.showSaveDialog(fxPanel.getScene().getWindow());
+		File selectedFile  = fileChooser.showSaveDialog(null);
 		//if (fd.getFile() != null) {
 	//		selectedFile = new File(fd.getDirectory() + fd.getFile());
 		//}
