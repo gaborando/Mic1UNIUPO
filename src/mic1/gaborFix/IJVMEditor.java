@@ -48,7 +48,7 @@ public class IJVMEditor extends RememberPositionJFrame
 
 		Platform.runLater( () -> {
 			String lastMacroprogramm = prefs.get("last_macroprogram",null);
-			if(lastMacroprogramm != null)
+			if(lastMacroprogramm != null && new File(lastMacroprogramm).exists())
 				load(new File(lastMacroprogramm));
 		});
 
@@ -60,6 +60,10 @@ public class IJVMEditor extends RememberPositionJFrame
 	private Scene createScene() {
 		codeArea = new IJVMCodeArea();
 
+		Button newBtn = createButton("newfile", this::newfile,
+				"New document.\n\n" +
+						"Note: the demo will load only previously-saved \"" + RTFX_FILE_EXTENSION + "\" files. " +
+						"This file format is abitrary and may change across versions.", "file-empty.png");
 		Button loadBtn = createButton("loadfile", this::loadDocument,
 				"Load document.\n\n" +
 						"Note: the demo will load only previously-saved \"" + RTFX_FILE_EXTENSION + "\" files. " +
@@ -78,7 +82,7 @@ public class IJVMEditor extends RememberPositionJFrame
 		Button build = createButton("build", this::compile, "Build", "wrench.png");
 		Button load = createButton("build_load", this::buildAndLoad, "Build & Load", "arrow-right-bold.png");
 
-		ToolBar toolBar1 = new ToolBar(
+		ToolBar toolBar1 = new ToolBar(newBtn,
 				loadBtn, saveBtn,  new Separator(Orientation.VERTICAL),
 				undoBtn, redoBtn, new Separator(Orientation.VERTICAL),
 				cutBtn, copyBtn, pasteBtn, new Separator(Orientation.VERTICAL),
@@ -96,6 +100,12 @@ public class IJVMEditor extends RememberPositionJFrame
 		scene.getStylesheets().add(IJVMEditor.class.getResource("ijvm-keywords.css").toExternalForm());
 
 		return (scene);
+	}
+
+	private void newfile() {
+		codeArea.clear();
+		currentFile = null;
+
 	}
 
 	private void buildAndLoad()
@@ -178,7 +188,7 @@ public class IJVMEditor extends RememberPositionJFrame
 		fileChooser.setTitle("Open document");
 		fileChooser.setInitialDirectory(currentFile!=null? currentFile.getParentFile():new File(initialDir));
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JAS FILE", "*."+RTFX_FILE_EXTENSION));
-		File selectedFile  = fileChooser.showOpenDialog(null);
+		File selectedFile  = fileChooser.showOpenDialog(fxPanel.getScene().getWindow());
 		//if (fd.getFile() != null) {
 		//	selectedFile = new File(fd.getDirectory() + fd.getFile());
 		//}
@@ -202,7 +212,7 @@ public class IJVMEditor extends RememberPositionJFrame
 		fileChooser.setInitialDirectory(currentFile!=null? currentFile.getParentFile():new File(initialDir));
 		fileChooser.setInitialFileName("program."+ RTFX_FILE_EXTENSION);
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JAS FILE", "*."+RTFX_FILE_EXTENSION));
-		File selectedFile  = fileChooser.showSaveDialog(null);
+		File selectedFile  = fileChooser.showSaveDialog(fxPanel.getScene().getWindow());
 		//if (fd.getFile() != null) {
 	//		selectedFile = new File(fd.getDirectory() + fd.getFile());
 		//}
