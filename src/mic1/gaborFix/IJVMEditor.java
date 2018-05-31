@@ -15,6 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import mic1.IJVMAssembler;
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
@@ -110,8 +111,14 @@ public class IJVMEditor extends RememberPositionJFrame
 
 	private void buildAndLoad()
 	{
-		Platform.runLater( () -> {
-		builderProgramHandler.handle(compile());});
+		try
+		{
+			SwingUtilities.invokeLater(() ->
+					builderProgramHandler.handle(compile())
+			);
+		}catch (Exception ignored){
+
+		}
 	}
 
 	private String compile() {
