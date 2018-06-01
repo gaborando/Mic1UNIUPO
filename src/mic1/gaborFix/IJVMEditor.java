@@ -49,7 +49,7 @@ public class IJVMEditor extends RememberPositionJFrame
 
 		Platform.runLater( () -> {
 			String lastMacroprogramm = prefs.get("last_macroprogram",null);
-			if(lastMacroprogramm != null)
+			if(lastMacroprogramm != null && new File(lastMacroprogramm).exists())
 				load(new File(lastMacroprogramm));
 		});
 
@@ -61,6 +61,10 @@ public class IJVMEditor extends RememberPositionJFrame
 	private Scene createScene() {
 		codeArea = new IJVMCodeArea();
 
+		Button newBtn = createButton("newfile", this::newfile,
+				"New document.\n\n" +
+						"Note: the demo will load only previously-saved \"" + RTFX_FILE_EXTENSION + "\" files. " +
+						"This file format is abitrary and may change across versions.", "file-empty.png");
 		Button loadBtn = createButton("loadfile", this::loadDocument,
 				"Load document.\n\n" +
 						"Note: the demo will load only previously-saved \"" + RTFX_FILE_EXTENSION + "\" files. " +
@@ -79,7 +83,7 @@ public class IJVMEditor extends RememberPositionJFrame
 		Button build = createButton("build", this::compile, "Build", "wrench.png");
 		Button load = createButton("build_load", this::buildAndLoad, "Build & Load", "arrow-right-bold.png");
 
-		ToolBar toolBar1 = new ToolBar(
+		ToolBar toolBar1 = new ToolBar(newBtn,
 				loadBtn, saveBtn,  new Separator(Orientation.VERTICAL),
 				undoBtn, redoBtn, new Separator(Orientation.VERTICAL),
 				cutBtn, copyBtn, pasteBtn, new Separator(Orientation.VERTICAL),
@@ -97,6 +101,12 @@ public class IJVMEditor extends RememberPositionJFrame
 		scene.getStylesheets().add(IJVMEditor.class.getResource("ijvm-keywords.css").toExternalForm());
 
 		return (scene);
+	}
+
+	private void newfile() {
+		codeArea.clear();
+		currentFile = null;
+
 	}
 
 	private void buildAndLoad()
