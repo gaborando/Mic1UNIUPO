@@ -59,7 +59,10 @@ public class IJVMEditor extends RememberPositionJFrame
 		Platform.runLater(() -> {
 			String lastMacroprogramm = prefs.get("last_macroprogram", null);
 			if (lastMacroprogramm != null && new File(lastMacroprogramm).exists())
+			{
 				load(new File(lastMacroprogramm));
+				buildAndLoad();
+			}
 		});
 
 
