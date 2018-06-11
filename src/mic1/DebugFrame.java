@@ -30,9 +30,10 @@ package mic1;/*
 
 import mic1.gaborFix.RememberPositionJFrame;
 
-import java.awt.Button;
-import java.awt.GridBagLayout;
-import java.awt.TextArea;
+import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 
@@ -66,14 +67,17 @@ public class DebugFrame extends RememberPositionJFrame
 		setSize(getPreferredSize());
 		paintAll(getGraphics());
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		addWindowListener(new WindowAdapter()
+		{
+			@Override
+			public void windowClosed(WindowEvent e)
+			{
+				mic1.mic1sim.debug = false;
+				super.windowClosed(e);
+			}
+		});
+
 	}
 
-//	public boolean handleEvent(Event event) {
-//		if (event.id == Event.WINDOW_DESTROY) {
-//			dispose();
-//			mic1.mic1sim.debug = false;
-//		}
-//		return true;
-//	}
 
 }
