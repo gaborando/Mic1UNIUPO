@@ -2,11 +2,12 @@ package mic1.gaborFix;
 
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
+import javafx.geometry.Bounds;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -14,12 +15,17 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import mic1.IJVMAssembler;
+import mic1.mic1sim;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Scanner;
+import java.util.Vector;
+import java.util.stream.Stream;
 
 public class IJVMEditor extends RememberPositionJFrame
 {
@@ -33,6 +39,9 @@ public class IJVMEditor extends RememberPositionJFrame
 	private Label msg;
 	private PrintStream err;
 	private TextArea errConsole;
+	private HashMap<Integer, Integer> debugMapping = null;
+	private HashMap<Integer, Integer> reverseDebugMapping = null;
+	private Vector breakpoint_vector;
 
 	public IJVMEditor(BuilderProgramHandler builderProgramHandler) throws HeadlessException
 	{
@@ -47,19 +56,22 @@ public class IJVMEditor extends RememberPositionJFrame
 		this.builderProgramHandler = builderProgramHandler;
 		msg = new Label();
 
-		Platform.runLater( () -> {
-			String lastMacroprogramm = prefs.get("last_macroprogram",null);
-			if(lastMacroprogramm != null && new File(lastMacroprogramm).exists())
+		Platform.runLater(() -> {
+			String lastMacroprogramm = prefs.get("last_macroprogram", null);
+			if (lastMacroprogramm != null && new File(lastMacroprogramm).exists())
+			{
 				load(new File(lastMacroprogramm));
+				buildAndLoad();
+			}
 		});
 
 
 	}
 
 
-
-	private Scene createScene() {
-		codeArea = new IJVMCodeArea();
+	private Scene createScene()
+	{
+		codeArea = new IJVMCodeArea(this::handleBreakpoint);
 
 		Button newBtn = createButton("newfile", this::newfile,
 				"New document.\n\n" +
@@ -84,14 +96,14 @@ public class IJVMEditor extends RememberPositionJFrame
 		Button load = createButton("build_load", this::buildAndLoad, "Build & Load", "arrow-right-bold.png");
 
 		ToolBar toolBar1 = new ToolBar(newBtn,
-				loadBtn, saveBtn,  new Separator(Orientation.VERTICAL),
+				loadBtn, saveBtn, new Separator(Orientation.VERTICAL),
 				undoBtn, redoBtn, new Separator(Orientation.VERTICAL),
 				cutBtn, copyBtn, pasteBtn, new Separator(Orientation.VERTICAL),
 				build, load, new Separator(Orientation.VERTICAL));
 
 		errConsole = new TextArea();
 		errConsole.setEditable(false);
-		err = new PrintStream( new FxTextAreaOutputStream( errConsole ) );
+		err = new PrintStream(new FxTextAreaOutputStream(errConsole));
 
 		VBox vbox = new VBox();
 		VBox.setVgrow(codeArea, Priority.ALWAYS);
@@ -103,7 +115,37 @@ public class IJVMEditor extends RememberPositionJFrame
 		return (scene);
 	}
 
-	private void newfile() {
+	private Boolean handleBreakpoint(Integer integer)
+	{
+
+
+		if (breakpoint_vector != null && reverseDebugMapping != null)
+		{
+			int address = reverseDebugMapping.getOrDefault(integer + 1, -1);
+			if (integer < 0) // se l'indice è negativo controlla semplicemente che sia presente
+				return breakpoint_vector.contains(String.valueOf(reverseDebugMapping.getOrDefault(-integer + 1, -1)));
+
+			if (address == -1)
+				return false;
+			if (integer < 0) // se l'indice è negativo controlla semplicemente che sia presente
+				return breakpoint_vector.contains(String.valueOf(address));
+			if (breakpoint_vector.contains(String.valueOf(address)))
+			{
+				breakpoint_vector.remove(String.valueOf(address));
+				mic1sim.Breakpoint = breakpoint_vector.size() > 0;
+				return false;
+			} else
+			{
+				breakpoint_vector.add(String.valueOf(address));
+				return mic1sim.Breakpoint = breakpoint_vector.size() > 0;
+			}
+		}
+		return mic1sim.Breakpoint = false;
+
+	}
+
+	private void newfile()
+	{
 		codeArea.clear();
 		currentFile = null;
 
@@ -116,14 +158,16 @@ public class IJVMEditor extends RememberPositionJFrame
 			SwingUtilities.invokeLater(() ->
 					builderProgramHandler.handle(compile())
 			);
-		}catch (Exception ignored){
+		} catch (Exception ignored)
+		{
 
 		}
 	}
 
-	private String compile() {
+	private String compile()
+	{
 		save();
-		if(currentFile==null)
+		if (currentFile == null)
 			return null;
 		errConsole.clear();
 		InputStream in = null;
@@ -131,41 +175,72 @@ public class IJVMEditor extends RememberPositionJFrame
 		IJVMAssembler ia = null;
 		String infile = currentFile.getPath();
 		String outfile = infile.substring(0, infile.length() - 4) + ".ijvm";
-		try {
+		try
+		{
 			in = new BufferedInputStream(new FileInputStream(currentFile));
-		}
-		catch (FileNotFoundException fnfe) {
+		} catch (FileNotFoundException fnfe)
+		{
 			err.println("File not found: " + infile + ", unable to compile");
 			return null;
-		}catch (Exception ex) {
+		} catch (Exception ex)
+		{
 			err.println("Error opening file: " + infile + ", unable to compile");
 			return null;
 		}
-		try {
+		try
+		{
 			out = new FileOutputStream(outfile);
-		}
-		catch (IOException ioe) {
+		} catch (IOException ioe)
+		{
 			err.println("Error opening file: " + outfile + ", unable to compile");
 			return null;
 		}
 		err.println("Compiling " + infile + "...");
-		ia = new IJVMAssembler(in, out, outfile,err, Files.exists(Paths.get("ijvm.conf")) ? "ijvm.conf" : getClass().getResource("../ijvm.conf").getFile());
-		try {
+		ia = new IJVMAssembler(in, out, outfile, err, Files.exists(Paths.get("ijvm.conf")) ? "ijvm.conf" : getClass().getResource("../ijvm.conf").getFile());
+		try
+		{
 			in.close();
 			out.close();
-		} catch (IOException e) {
+		} catch (IOException e)
+		{
 			err.println(e);
 		}
-		if (ia.getStatus()){
+		if (ia.getStatus())
+		{
 			err.println(" Compilation successfull");
-		}
-		else{
+		} else
+		{
 			err.println("Error compiling file: " + infile);
 		}
+		loadDebugMapping();
+
 		return outfile;
 	}
 
-	private Button createButton(String styleClass, Runnable action, String toolTip, String image) {
+	private void loadDebugMapping()
+	{
+		debugMapping = new HashMap<>();
+		reverseDebugMapping = new HashMap<>();
+		String outfile = currentFile.getPath().substring(0, currentFile.getPath().length() - 4) + ".dbg";
+		try (Stream<String> stream = Files.lines(Paths.get(outfile)))
+		{
+			stream.forEach(line -> {
+				Scanner scanner = new Scanner(line);
+				scanner.useDelimiter(",");
+				int a = scanner.nextInt();
+				int b = scanner.nextInt();
+				debugMapping.put(a, b);
+				reverseDebugMapping.put(b, a);
+			});
+		} catch (IOException e)
+		{
+			debugMapping = null;
+		}
+	}
+
+
+	private Button createButton(String styleClass, Runnable action, String toolTip, String image)
+	{
 		Button button = new Button();
 		button.getStyleClass().add(styleClass);
 		button.setOnAction(evt -> {
@@ -174,7 +249,8 @@ public class IJVMEditor extends RememberPositionJFrame
 		});
 		button.setMaxWidth(12);
 		button.setMaxHeight(12);
-		if (toolTip != null) {
+		if (toolTip != null)
+		{
 			button.setTooltip(new Tooltip(toolTip));
 		}
 		ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream(image)));
@@ -184,7 +260,8 @@ public class IJVMEditor extends RememberPositionJFrame
 		return button;
 	}
 
-	private void loadDocument() {
+	private void loadDocument()
+	{
 		//FileDialog fd = new FileDialog(this, "Load Macroprogram", FileDialog.LOAD);
 		//fd.setFile("*.jas");
 		//fd.setVisible(true);
@@ -193,46 +270,53 @@ public class IJVMEditor extends RememberPositionJFrame
 		String initialDir = System.getProperty("user.dir");
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open document");
-		fileChooser.setInitialDirectory(currentFile!=null? currentFile.getParentFile():new File(initialDir));
-		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JAS FILE", "*."+RTFX_FILE_EXTENSION));
-		File selectedFile  = fileChooser.showOpenDialog(null);
+		fileChooser.setInitialDirectory(currentFile != null ? currentFile.getParentFile() : new File(initialDir));
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JAS FILE", "*." + RTFX_FILE_EXTENSION));
+		File selectedFile = fileChooser.showOpenDialog(null);
 		//if (fd.getFile() != null) {
 		//	selectedFile = new File(fd.getDirectory() + fd.getFile());
 		//}
 
 		load(selectedFile);
 	}
-	private void save(){
-		if(currentFile==null)
+
+	private void save()
+	{
+		if (currentFile == null)
 			saveDocument();
 		else
 			save(currentFile);
 	}
 
-	private void saveDocument() {
+	private void saveDocument()
+	{
 		//FileDialog fd = new FileDialog(this, "Save Macroprogram", FileDialog.SAVE);
 		//fd.setFile("*.jas");
 		//fd.setVisible(true);
 		String initialDir = System.getProperty("user.dir");
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Save document");
-		fileChooser.setInitialDirectory(currentFile!=null? currentFile.getParentFile():new File(initialDir));
-		fileChooser.setInitialFileName("program."+ RTFX_FILE_EXTENSION);
-		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JAS FILE", "*."+RTFX_FILE_EXTENSION));
-		File selectedFile  = fileChooser.showSaveDialog(null);
+		fileChooser.setInitialDirectory(currentFile != null ? currentFile.getParentFile() : new File(initialDir));
+		fileChooser.setInitialFileName("program." + RTFX_FILE_EXTENSION);
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JAS FILE", "*." + RTFX_FILE_EXTENSION));
+		File selectedFile = fileChooser.showSaveDialog(null);
 		//if (fd.getFile() != null) {
-	//		selectedFile = new File(fd.getDirectory() + fd.getFile());
+		//		selectedFile = new File(fd.getDirectory() + fd.getFile());
 		//}
 
 		save(selectedFile);
 
 	}
 
-	private void save(File selectedFile){
-		if (selectedFile != null) {
-			try (PrintWriter out = new PrintWriter(selectedFile)) {
+	private void save(File selectedFile)
+	{
+		if (selectedFile != null)
+		{
+			try (PrintWriter out = new PrintWriter(selectedFile))
+			{
 				out.println(codeArea.getText());
-			}catch (Exception e){
+			} catch (Exception e)
+			{
 				e.printStackTrace();
 			}
 			prefs.put("last_macroprogram", selectedFile.getPath());
@@ -240,23 +324,28 @@ public class IJVMEditor extends RememberPositionJFrame
 		}
 	}
 
-	private void load(File selectedFile){
-		if (selectedFile != null) {
+	private void load(File selectedFile)
+	{
+		if (selectedFile != null)
+		{
 			codeArea.clear();
 
-			try {
+			try
+			{
 				InputStream is = new FileInputStream(selectedFile);
 				BufferedReader buf = new BufferedReader(new InputStreamReader(is));
 
 				String line = buf.readLine();
 
 
-				while (line != null) {
+				while (line != null)
+				{
 					codeArea.appendText(line);
 					codeArea.appendText("\n");
 					line = buf.readLine();
 				}
-			}catch (IOException e){
+			} catch (IOException e)
+			{
 				e.printStackTrace();
 			}
 
@@ -266,4 +355,45 @@ public class IJVMEditor extends RememberPositionJFrame
 		}
 	}
 
+	public HashMap<Integer, Integer> getDebugMapping()
+	{
+		return debugMapping;
 	}
+
+	public void debug(int value)
+	{
+
+		Platform.runLater(
+
+				() -> {
+					if (debugMapping != null)
+					{
+						int line = debugMapping.getOrDefault(value, -1);
+						if (line < 0)
+							return;
+						int startPos = codeArea.position(line - 1, 0).toOffset();
+						int endPos = codeArea.position(line, 0).toOffset();
+						codeArea.selectRange(startPos, endPos);
+						Bounds bounds = codeArea.getSelectionBounds().orElse(null);
+						if (bounds == null)
+						{
+
+							int i = 10;
+							while (line - i < 0)
+								i++;
+							codeArea.showParagraphAtTop(line - 5);
+						}
+					}
+					//codeArea.setStyle(debugMapping.getOrDefault(value,0), Collections.singleton("-fx-highlight-fill: lightgray; -fx-highlight-text-fill: firebrick;"));
+					//	codeArea.setParagraphStyle(12, Collections.singleton("-fx-background-color: red;"));
+				}
+		);
+
+		//	codeArea.appendText("ciao\n");
+	}
+
+	public void setBreakPointVector(Vector breakpoint_vector)
+	{
+		this.breakpoint_vector = breakpoint_vector;
+	}
+}

@@ -15,6 +15,7 @@ import org.fxmisc.richtext.model.StyleSpansBuilder;
 
 import java.time.Duration;
 import java.util.*;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,7 +46,7 @@ public class IJVMCodeArea extends CodeArea {
     private final Pattern firstWordPattern = Pattern.compile("([^ \t]\\w+)");
     private LinkedList<String> searchResult = new LinkedList<>();
 
-    public IJVMCodeArea() {
+    public IJVMCodeArea(Function<Integer,Boolean> breakpointHandler) {
         super();
         entries = new TreeSet<>();
         final Popup popup = new Popup();
@@ -135,7 +136,7 @@ public class IJVMCodeArea extends CodeArea {
         getEntries().addAll(Arrays.asList(KEYWORDS));
 
         // add line numbers to the left of area
-        setParagraphGraphicFactory(LineNumberFactory.get(this));
+        setParagraphGraphicFactory(LineBreakPointNumberFactory.get(this, breakpointHandler));
         plainTextChanges()
                 // do not emit an event until 500 ms have passed since the last emission of previous stream
                 .successionEnds(Duration.ofMillis(1))
@@ -176,5 +177,8 @@ public class IJVMCodeArea extends CodeArea {
         return entries;
     }
 
+    public static void handleBreakpoint(int line)
+    {
 
+    }
 }

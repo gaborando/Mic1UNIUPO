@@ -469,7 +469,7 @@ public class mic1sim extends RememberPositionFrame implements Mic1Constants {
 
 
   public void reset() {
-    Breakpoint_Vector.removeAllElements();
+    //Breakpoint_Vector.removeAllElements();
     if (mp_loaded) {
       halt = false;
       if (debug)
@@ -525,7 +525,7 @@ public class mic1sim extends RememberPositionFrame implements Mic1Constants {
 
       if (memory) mM_frame.reset();
       if (control_memory) cs_frame.reset();
-      if (Breakpoint) Breakpoint_Vector.removeAllElements(); 
+      //if (Breakpoint) Breakpoint_Vector.removeAllElements();
       if (stack){
 //      	  	Stack_Frame.dispose();
 //      	  	Stack_Frame = new StackFrame(main_memory, Pointers);
@@ -647,7 +647,7 @@ public class mic1sim extends RememberPositionFrame implements Mic1Constants {
 
        {
           stop();
-          ErrorDialog err = new ErrorDialog("Program interrupted" , "Reached breakpoint: PC = " + Integer.toHexString(pc.getValue()));
+          //ErrorDialog err = new ErrorDialog("Program interrupted" , "Reached breakpoint: PC = " + Integer.toHexString(pc.getValue()));
 	  old_pc.setValue(pc.getValue());
        }
     }
@@ -655,6 +655,7 @@ public class mic1sim extends RememberPositionFrame implements Mic1Constants {
 	}
     if (control_memory) cs_frame.selectMpc(mpc.getValue());
     if (memory) mM_frame.selectPc(pc.getValue());
+    if(code_editor!=null) code_editor.debug(pc.getValue());
   }
 
   public static void halt() {
@@ -728,7 +729,7 @@ public class mic1sim extends RememberPositionFrame implements Mic1Constants {
     	err = new ErrorDialog("Error loading macroprogram","Exception ioe");
     }
 
-    if (Breakpoint) Breakpoint_Vector.removeAllElements(); //BREAKPOINT E' TRUE SOLO QUANDO CI SONO DEI BREAKPOINT CHE VANNO OVVIAMENTE ELIMINATI DAL VECTOR ALL'ATTO DEL CARICAMENTO DI UN NUOVO MACROPROGRAMMA
+    //if (Breakpoint) Breakpoint_Vector.removeAllElements(); //BREAKPOINT E' TRUE SOLO QUANDO CI SONO DEI BREAKPOINT CHE VANNO OVVIAMENTE ELIMINATI DAL VECTOR ALL'ATTO DEL CARICAMENTO DI UN NUOVO MACROPROGRAMMA
 
     if (memory){
       mM_frame.dispose();
@@ -796,7 +797,7 @@ public class mic1sim extends RememberPositionFrame implements Mic1Constants {
       cs_frame = new ControlStoreFrame(control_store);
     }
 
-    if (Breakpoint) Breakpoint_Vector.removeAllElements(); //BREAKPOINT E' TRUE SOLO QUANDO CI SONO DEI BREAKPOINT CHE VANNO OVVIAMENTE ELIMINATI DAL VECTOR ALL'ATTO DEL CARICAMENTO DI UN NUOVO MACROPROGRAMMA
+    //if (Breakpoint) Breakpoint_Vector.removeAllElements(); //BREAKPOINT E' TRUE SOLO QUANDO CI SONO DEI BREAKPOINT CHE VANNO OVVIAMENTE ELIMINATI DAL VECTOR ALL'ATTO DEL CARICAMENTO DI UN NUOVO MACROPROGRAMMA
 
     if (memory){
       mM_frame.dispose();
@@ -882,9 +883,10 @@ public class mic1sim extends RememberPositionFrame implements Mic1Constants {
 	    }
 	  }										//FINE											  
 
-        if (((String)event.arg).equals("IJVM Editor")) {
+        if (((String)event.arg).equals("IJVM EditorEditor")) {
           if(!editor){
             code_editor = new IJVMEditor(this::loadProgram);
+            code_editor.setBreakPointVector(Breakpoint_Vector);
             editor = true;
           }
         }
@@ -1031,6 +1033,7 @@ public class mic1sim extends RememberPositionFrame implements Mic1Constants {
     }
     if(!editor){
       code_editor = new IJVMEditor(this::loadProgram);
+      code_editor.setBreakPointVector(Breakpoint_Vector);
       editor = true;
     }
 
@@ -1063,4 +1066,6 @@ public class mic1sim extends RememberPositionFrame implements Mic1Constants {
     	else if (args[2].length() ==1)bad_option(); else if(args[2].charAt(1)!='n')bad_option(); else s = new mic1sim(args[0],args[1],true);
      else s = new mic1sim(false);
   }
+
+
 }
