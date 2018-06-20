@@ -58,7 +58,7 @@ public class IJVMAssembler implements Mic1Constants
 	private InputStream in = null;
 	private OutputStream out = null;
 	private BufferedWriter out_mne = null;
-	private Hashtable<String, Instruction> ops = null;
+	static Hashtable<String, Instruction> ops = null;
 	private Vector<IJVMConstant> constants = null;
 	private Vector<IJVMMethod> methods = null;
 	private IJVMMethod main = null;

@@ -29,6 +29,7 @@ String msg = null;
 Vector mnemonic = null;
 Vector constant = null;
 Vector labels = null;
+Vector displacements = null;
 int variables=0;
 
 public MNELoader(String filename){
@@ -43,6 +44,7 @@ public MNELoader(String filename){
 		mnemonic = new Vector();
 		constant = new Vector();
 		labels = new Vector();
+		displacements = new Vector();
       	if (validateFile())  readFile();
 	
 	}catch(IOException e) {
@@ -129,8 +131,21 @@ private boolean validateFile() {
 		byte_count = Integer.parseInt(in.readLine());
 
 		/* reads mnemonic instructions */
-		for(i=0;i<byte_count;i++)
-			mnemonic.add(in.readLine());
+		for(i=0;i<byte_count;i++) {
+		    String buffer = in.readLine();
+		    if (buffer.contains("_1")) {
+		        int j = 0;
+		        while (j < constant.size() && !buffer.equalsIgnoreCase(((Simbol) constant.elementAt(j)).getName()))
+                    j++;
+		        if (j < constant.size())
+                    displacements.add(Integer.toHexString(((Simbol) constant.elementAt(j)).getAddress()).toLowerCase() + " <---> " +
+                            Integer.toHexString(((Simbol) constant.elementAt(j)).getAddress() >> 2).toLowerCase());
+		        else
+                    displacements.add(null);
+            } else
+                displacements.add(null);
+		    mnemonic.add(buffer);
+        }
 		address += byte_count;
 
 		/* reads the next method's name */
@@ -156,4 +171,7 @@ public Vector getLabels(){
 	return labels;
 }
 
+public Vector getDisplacements() {
+		return displacements;
+	}
 }

@@ -60,6 +60,7 @@ public class mic1sim extends RememberPositionFrame implements Mic1Constants {
   private Vector mnemonic = null;	
   private Vector constant = null;	
   private Vector labels = null;
+  private Vector displacements = null;
   private IJVMcompiler ijvmCompiler = null;	
   private Mic1compiler mic1Compiler = null;
   public static TextArea stdout = new TextArea(5, 50);
@@ -714,6 +715,7 @@ public class mic1sim extends RememberPositionFrame implements Mic1Constants {
 		mnemonic = mne_loader.getMnemonic();
 		constant = mne_loader.getConstant();
 		labels = mne_loader.getLabels();
+		displacements = mne_loader.getDisplacements();
 		SP=SP_ORIGINAL+mne_loader.number_variables_main();
 		Pointers[1][sp.value] = 1;
 		sp.forceValue(SP);
@@ -733,7 +735,7 @@ public class mic1sim extends RememberPositionFrame implements Mic1Constants {
 
     if (memory){
       mM_frame.dispose();
-      mM_frame = new MainMemoryFrame(main_memory,mnemonic,constant,labels,Breakpoint_Vector);
+      mM_frame = new MainMemoryFrame(lv,main_memory,mnemonic,constant,labels,displacements,Breakpoint_Vector);
     }
     if (stack){
       Stack_Frame.dispose();
@@ -801,7 +803,7 @@ public class mic1sim extends RememberPositionFrame implements Mic1Constants {
 
     if (memory){
       mM_frame.dispose();
-      mM_frame = new MainMemoryFrame(main_memory,mnemonic,constant,labels,Breakpoint_Vector);
+      mM_frame = new MainMemoryFrame(lv,main_memory,mnemonic,constant,labels,displacements,Breakpoint_Vector);
     }
     if (stack){
       Stack_Frame.dispose();
@@ -877,7 +879,7 @@ public class mic1sim extends RememberPositionFrame implements Mic1Constants {
 	  }
       if (((String)event.arg).equals("Method Area")) {
 	   if(!memory){	
-	    	mM_frame = new MainMemoryFrame(main_memory,mnemonic,constant,labels,Breakpoint_Vector);
+	    	mM_frame = new MainMemoryFrame(lv,main_memory,mnemonic,constant,labels,displacements,Breakpoint_Vector);
 	    	mM_frame.update(address); 
 	   	memory = true;
 	    }
@@ -1023,7 +1025,7 @@ public class mic1sim extends RememberPositionFrame implements Mic1Constants {
       stack = true;
     }
     if(!memory){
-      mM_frame = new MainMemoryFrame(main_memory,mnemonic,constant,labels,Breakpoint_Vector);
+      mM_frame = new MainMemoryFrame(lv,main_memory,mnemonic,constant,labels,displacements,Breakpoint_Vector);
       mM_frame.update(address);
       memory = true;
     }
