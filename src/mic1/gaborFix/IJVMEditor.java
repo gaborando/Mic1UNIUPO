@@ -115,7 +115,7 @@ public class IJVMEditor extends RememberPositionJFrame
 		return (scene);
 	}
 
-	private Boolean handleBreakpoint(Integer integer)
+	private Integer handleBreakpoint(Integer integer)
 	{
 
 
@@ -123,24 +123,35 @@ public class IJVMEditor extends RememberPositionJFrame
 		{
 			int address = reverseDebugMapping.getOrDefault(integer + 1, -1);
 			if (integer < 0) // se l'indice è negativo controlla semplicemente che sia presente
-				return breakpoint_vector.contains(String.valueOf(reverseDebugMapping.getOrDefault(-integer + 1, -1)));
+			{
+				if( breakpoint_vector.contains(String.valueOf(reverseDebugMapping.getOrDefault(-integer + 1, -1))))
+				{
+					errConsole.appendText("\nBREACKPOINT ADDED: Line: "+(-integer+1)+" Address: 0x"+Integer.toHexString(address));
+					return reverseDebugMapping.getOrDefault(-integer + 1, -1);
+				}
+				return -1;
+			}
 
 			if (address == -1)
-				return false;
-			if (integer < 0) // se l'indice è negativo controlla semplicemente che sia presente
-				return breakpoint_vector.contains(String.valueOf(address));
+				return -1;
+
 			if (breakpoint_vector.contains(String.valueOf(address)))
 			{
 				breakpoint_vector.remove(String.valueOf(address));
 				mic1sim.Breakpoint = breakpoint_vector.size() > 0;
-				return false;
+				return -1;
 			} else
 			{
 				breakpoint_vector.add(String.valueOf(address));
-				return mic1sim.Breakpoint = breakpoint_vector.size() > 0;
+				if(mic1sim.Breakpoint = breakpoint_vector.size() > 0){
+					errConsole.appendText("\nBREACKPOINT ADDED: Line: "+(integer+1)+" Address: 0x"+Integer.toHexString(address));
+					return address;
+				}
+				return -1;
 			}
 		}
-		return mic1sim.Breakpoint = false;
+		mic1sim.Breakpoint = false;
+		return -1;
 
 	}
 

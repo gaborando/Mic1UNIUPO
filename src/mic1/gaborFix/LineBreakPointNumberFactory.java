@@ -26,21 +26,21 @@ public class LineBreakPointNumberFactory implements IntFunction<Node>
 	private static final Background DEFAULT_BACKGROUND;
 	private final Val<Integer> nParagraphs;
 	private final IntFunction<String> format;
-	private final Function<Integer, Boolean> breakpointHandler;
+	private final Function<Integer, Integer> breakpointHandler;
 
-	public static IntFunction<Node> get(GenericStyledArea<?, ?, ?> area, Function<Integer, Boolean> breakpointHandler)
+	public static IntFunction<Node> get(GenericStyledArea<?, ?, ?> area, Function<Integer, Integer> breakpointHandler)
 	{
 		return get(area, (digits) -> {
 			return "%1$" + digits + "s";
 		}, breakpointHandler);
 	}
 
-	public static IntFunction<Node> get(GenericStyledArea<?, ?, ?> area, IntFunction<String> format, Function<Integer, Boolean> breakpointHandler)
+	public static IntFunction<Node> get(GenericStyledArea<?, ?, ?> area, IntFunction<String> format, Function<Integer, Integer> breakpointHandler)
 	{
 		return new LineBreakPointNumberFactory(area, format, breakpointHandler);
 	}
 
-	private LineBreakPointNumberFactory(GenericStyledArea<?, ?, ?> area, IntFunction<String> format, Function<Integer, Boolean> breakpointHandler)
+	private LineBreakPointNumberFactory(GenericStyledArea<?, ?, ?> area, IntFunction<String> format, Function<Integer, Integer> breakpointHandler)
 	{
 		this.nParagraphs = LiveList.sizeOf(area.getParagraphs());
 		this.format = format;
@@ -49,6 +49,7 @@ public class LineBreakPointNumberFactory implements IntFunction<Node>
 
 	public Node apply(int idx)
 	{
+
 		Val<String> formatted = this.nParagraphs.map((n) -> {
 			return this.format(idx + 1, n);
 		});
@@ -60,22 +61,40 @@ public class LineBreakPointNumberFactory implements IntFunction<Node>
 		lineNo.setAlignment(Pos.TOP_RIGHT);
 		lineNo.getStyleClass().add("lineno");
 		lineNo.textProperty().bind(formatted.conditionOnShowing(lineNo));
+
+
 		if (breakpointHandler != null)
 		{
-			if (breakpointHandler.apply(-idx))
+			int address;
+			if ((address = breakpointHandler.apply(-idx))>=0)
 				//lineNo.getStyle("-rtfx-background-color: red");
-				lineNo.setBackground(new Background(new BackgroundFill[]{new BackgroundFill(Color.web("red"), (CornerRadii) null, (Insets) null)}));
+			{
+				lineNo.setBackground(new Background(new BackgroundFill[]{new BackgroundFill(Color.web("#ffb2b2"), (CornerRadii) null, (Insets) null)}));
+				lineNo.textProperty().unbind();
+				lineNo.setText(formatted.conditionOnShowing(lineNo).getValue()+" (0x"+Integer.toHexString(address)+")");
+			}
 			else
+			{
 				lineNo.setBackground(DEFAULT_BACKGROUND);
+				lineNo.textProperty().bind(formatted.conditionOnShowing(lineNo));
+			}
 		}
 		lineNo.setOnMouseClicked(event -> {
 			if (breakpointHandler != null)
 			{
-				if (breakpointHandler.apply(idx))
+				int address;
+				if ((address = breakpointHandler.apply(idx))>=0)
 					//lineNo.getStyle("-rtfx-background-color: red");
-					lineNo.setBackground(new Background(new BackgroundFill[]{new BackgroundFill(Color.web("red"), (CornerRadii) null, (Insets) null)}));
+				{
+					lineNo.setBackground(new Background(new BackgroundFill[]{new BackgroundFill(Color.web("#ffb2b2"), (CornerRadii) null, (Insets) null)}));
+					lineNo.textProperty().unbind();
+					lineNo.setText(formatted.conditionOnShowing(lineNo).getValue()+" (0x"+Integer.toHexString(address)+")");
+				}
 				else
+				{
 					lineNo.setBackground(DEFAULT_BACKGROUND);
+					lineNo.textProperty().bind(formatted.conditionOnShowing(lineNo));
+				}
 			}
 
 		});

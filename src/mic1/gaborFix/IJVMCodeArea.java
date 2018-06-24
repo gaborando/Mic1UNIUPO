@@ -46,7 +46,7 @@ public class IJVMCodeArea extends CodeArea {
     private final Pattern firstWordPattern = Pattern.compile("([^ \t]\\w+)");
     private LinkedList<String> searchResult = new LinkedList<>();
 
-    public IJVMCodeArea(Function<Integer,Boolean> breakpointHandler) {
+    public IJVMCodeArea(Function<Integer,Integer> breakpointHandler) {
         super();
         entries = new TreeSet<>();
         final Popup popup = new Popup();
