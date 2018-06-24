@@ -21,6 +21,7 @@ class MainMemoryModel extends AbstractTableModel implements Mic1Constants {
 	static final public String hexWord = "Content (hex)";
 	static final public String mnemonic = "Mnemonic";
 	static final public String labels = "Labels";
+	static final public String displacement = "Byte <---> Word (hex)";
 
 	protected Vector data = new Vector(MEM_SHOWED);
 
@@ -31,7 +32,7 @@ class MainMemoryModel extends AbstractTableModel implements Mic1Constants {
 	}
 
 	public int getColumnCount() {
-		return 4;
+		return 5;
 	}
 
 	public int getRowCount() {
@@ -51,6 +52,8 @@ class MainMemoryModel extends AbstractTableModel implements Mic1Constants {
 				return e.getMnemonic();
 			case 3:
 				return e.getLabel();
+			case 4:
+				return e.getDisplacement();
 			}
 		} catch (Exception e) {
 		}
@@ -69,6 +72,8 @@ class MainMemoryModel extends AbstractTableModel implements Mic1Constants {
 			return mnemonic;
 		case 3:
 			return labels;
+		case 4:
+			return displacement;
 		}
 		return "";
 	}
@@ -91,11 +96,33 @@ class MainMemoryModel extends AbstractTableModel implements Mic1Constants {
 		return -1;
 	}
 
+	void updateData(Register lv,Vector hexInstruction, int index) {
+		MemoryEntry e = (MemoryEntry) data.elementAt(index);
+		if (e.getMnemonic() != null && e.getDisplacement() == null && IJVMAssembler.ops != null) {
+			Instruction instruction = IJVMAssembler.ops.get(e.getMnemonic());
+			if (instruction != null) {
+				Vector<ParamType> paramTypes = instruction.getParamTypes();
+				for (int i = 0; i < paramTypes.size(); i++) {
+					if (paramTypes.elementAt(i) == ParamType.VARNUM) {
+						MemoryEntry next = (MemoryEntry) data.elementAt(index+(i+1));
+						if (lv == null)
+							next.setDisplacement(null);
+						else
+							next.setDisplacement(Integer.toHexString((lv.value + Integer.parseInt((String) hexInstruction.elementAt(index+(i+1)))) << 2).toLowerCase() +
+									" <---> " + Integer.toHexString(lv.value + Integer.parseInt((String) hexInstruction.elementAt(index+(i+1)))).toLowerCase());
+						data.setElementAt(next, index+(i+1));
+					}
+				}
+			}
+		}
+	}
+
 	void setData(Vector hexInstruction, Vector mnemonic, Vector constant,
-			Vector labels, int start) {
+			Vector labels, Vector displacements, int start) {
 		String hexWord = null;
 		String mnemonic_word;
 		String label_word;
+		String displacement_word = null;
 		int i, index;
 
 		this.start = start;
@@ -103,9 +130,10 @@ class MainMemoryModel extends AbstractTableModel implements Mic1Constants {
 		for (i = start; i < (start + MEM_SHOWED); i++) {
 			hexWord = (String) hexInstruction.elementAt(i - start);
 
-			if (mnemonic != null && i < mnemonic.size())
+			if (mnemonic != null && i < mnemonic.size()) {
 				mnemonic_word = (String) mnemonic.elementAt(i);
-			else if ((index = thereIsSimbol(constant, i)) != -1)
+				displacement_word = (String) displacements.elementAt(i);
+			} else if ((index = thereIsSimbol(constant, i)) != -1)
 				mnemonic_word = ((Simbol) constant.elementAt(index)).getName();
 			else
 				mnemonic_word = null;
@@ -115,9 +143,8 @@ class MainMemoryModel extends AbstractTableModel implements Mic1Constants {
 				label_word = ((Simbol) labels.elementAt(index)).getName();
 			else
 				label_word = null;
-
 			MemoryEntry e = new MemoryEntry(i, hexWord, mnemonic_word,
-					label_word);
+					label_word, displacement_word);
 			data.set(i - start, e);
 		}
 
@@ -165,6 +192,7 @@ class MemoryEntry {
 	private String hexWord = null;
 	private String mnemonic = null;
 	private String label = null;
+	private String displacement = null;
 
 	public MemoryEntry(int address, String hexWord) {
 		this.address = Integer.toHexString(address);
@@ -178,11 +206,12 @@ class MemoryEntry {
 	}
 
 	public MemoryEntry(int address, String hexWord, String mnemonic,
-			String label) {
+			String label, String displacement) {
 		this.address = Integer.toHexString(address);
 		this.hexWord = hexWord;
 		this.mnemonic = mnemonic;
 		this.label = label;
+		this.displacement = displacement;
 	}
 
 	public String getAddress() {
@@ -201,8 +230,16 @@ class MemoryEntry {
 		return label;
 	}
 
+	public String getDisplacement() {
+		return displacement;
+	}
+
 	public void setHexWord(String hexWord) {
 		this.hexWord = hexWord;
+	}
+
+	public void setDisplacement(String displacement) {
+		this.displacement = displacement;
 	}
 
 }

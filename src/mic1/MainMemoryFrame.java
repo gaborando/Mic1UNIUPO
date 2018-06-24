@@ -56,6 +56,8 @@ public class MainMemoryFrame extends RememberPositionJFrame implements TableMode
 	private Vector mnemonic = null;
 	private Vector constant = null;
 	private Vector labels = null;
+	private Vector displacements = null;
+    private Register lv = null;
 	JButton okButton = null;
 	JTextField start = null;
 	JTable table = null;
@@ -71,20 +73,21 @@ public class MainMemoryFrame extends RememberPositionJFrame implements TableMode
 
 	boolean Breakpointed = false;
 
-	public MainMemoryFrame(MainMemory mM, Vector mnemonic, Vector constant,
-			Vector labels, Vector pippo) {
+	public MainMemoryFrame(Register lv, MainMemory mM, Vector mnemonic, Vector constant,
+			Vector labels, Vector displacements, Vector pippo) {
 
 		super("Method Area");
 		this.mM = mM;
 		this.mnemonic = mnemonic;
 		this.constant = constant;
 		this.labels = labels;
-
+		this.displacements = displacements;
+		this.lv = lv;
 		model = new MainMemoryModel(mM);
 
 		for (int i = 0; i < MEM_SHOWED; i++)
 			hexInstruction.add(MyByte.toHexString(mM.getByte(i)));
-		model.setData(hexInstruction, mnemonic, constant, labels, begin);
+		model.setData(hexInstruction, mnemonic, constant, labels, displacements, begin);
 
 		table = new JTable(model);
 		table.setFont(Font.decode("Courier New"));
@@ -155,6 +158,7 @@ public class MainMemoryFrame extends RememberPositionJFrame implements TableMode
 		int index = pc;
 		if ((begin <= pc) && (end >= pc)) {
 			index = pc - begin;
+			model.updateData(lv, hexInstruction, index);
 			table.setRowSelectionInterval(index, index);
 			table.setGridColor(p);
 			selected = true;
@@ -172,6 +176,7 @@ public class MainMemoryFrame extends RememberPositionJFrame implements TableMode
 	}
 
 	public void reset() {
+        model.setData(hexInstruction, mnemonic, constant, labels, displacements, begin);
 		removeSelectPc();
 		old_index = -1;
 		old_pc = -1;
@@ -221,7 +226,7 @@ public class MainMemoryFrame extends RememberPositionJFrame implements TableMode
 				hexInstruction
 						.add(i - begin, MyByte.toHexString(mM.getByte(i)));
 
-			model.setData(hexInstruction, mnemonic, constant, labels, begin);
+			model.setData(hexInstruction, mnemonic, constant, labels, displacements, begin);
 			selectPc(old_pc);
 		}
 	}
