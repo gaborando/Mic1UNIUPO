@@ -161,6 +161,7 @@ public class IJVMAssembler implements Mic1Constants
 			error("Error opening file " + outfile);
 		} catch (Exception e)
 		{
+			error(e.getMessage());
 			e.printStackTrace();
 		}
 	}

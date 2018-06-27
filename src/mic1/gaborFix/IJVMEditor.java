@@ -207,14 +207,16 @@ public class IJVMEditor extends RememberPositionJFrame
 			return null;
 		}
 		err.println("Compiling " + infile + "...");
-		ia = new IJVMAssembler(in, out, outfile, err, Files.exists(Paths.get("ijvm.conf")) ? "ijvm.conf" : getClass().getResource("../ijvm.conf").getFile());
+
 		try
 		{
+			ia = new IJVMAssembler(in, out, outfile, err, Files.exists(Paths.get("ijvm.conf")) ? "ijvm.conf" : getClass().getResource("../ijvm.conf").getFile());
 			in.close();
 			out.close();
-		} catch (IOException e)
+		} catch (Exception e)
 		{
-			err.println(e);
+			err.println(e.getMessage());
+			return outfile;
 		}
 		if (ia.getStatus())
 		{
